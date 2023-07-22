@@ -14,5 +14,7 @@ String buildQuery(AlcoholFilters? filters){
   if(filters.priceIndices.maxVal != null && filters.priceIndices.enabled) query += "&maxPriceIndex=${filters.priceIndices.maxVal}";
   if(filters.prices.minVal != null && filters.prices.enabled) query += "&minPrice=${filters.prices.minVal}";
   if(filters.prices.maxVal != null && filters.prices.enabled) query += "&maxPrice=${filters.prices.maxVal}";
+  if(filters.volumes.minVal != null && filters.volumes.enabled) query += "&minVolume=${filters.volumes.minVal}";
+  if(filters.volumes.maxVal != null && filters.volumes.enabled) query += "&maxVolume=${filters.volumes.maxVal}";
   return query;
 }

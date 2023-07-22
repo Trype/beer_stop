@@ -30,6 +30,9 @@ class _SearchScreenState extends State<SearchScreen> {
   TextEditingController _minPriceController = TextEditingController();
   TextEditingController _maxPriceController = TextEditingController();
 
+  TextEditingController _minVolumeController = TextEditingController();
+  TextEditingController _maxVolumeController = TextEditingController();
+
 
   Widget _createFilterFormFieldRow(TextEditingController minController, TextEditingController maxController, RangeFilter range){
     return Row(
@@ -168,6 +171,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                   ),
                                   _createFilterFormField(_minPriceIndexController, _maxPriceIndexController, widget.filters.priceIndices),
                                   _createFilterFormField(_minPriceController, _maxPriceController, widget.filters.prices),
+                                  _createFilterFormField(_minVolumeController, _maxVolumeController, widget.filters.volumes),
                                   const SizedBox(height: 10,),
                                   TextButton(
                                     style: ButtonStyle(

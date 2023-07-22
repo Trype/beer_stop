@@ -25,4 +25,5 @@ class AlcoholFilters {
 
   RangeFilter priceIndices = RangeFilter(filterName: "Price Index");
   RangeFilter prices = RangeFilter(filterName: "Price");
+  RangeFilter volumes = RangeFilter(filterName: "Volume");
 }
