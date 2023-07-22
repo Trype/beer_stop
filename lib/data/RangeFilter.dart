@@ -6,6 +6,8 @@ class RangeFilter {
 
   RangeFilter({required this.filterName});
 
+  RangeFilter.fromInitialVals({required this.minVal, required this.maxVal, required this.filterName});
+
   bool _validateMin(String? value){
     return (enabled && value != null && value.isNotEmpty
         && double.tryParse(value) == null);
