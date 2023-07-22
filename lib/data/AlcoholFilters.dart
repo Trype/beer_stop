@@ -25,4 +25,6 @@ class AlcoholFilters {
 
   RangeFilter priceIndices = RangeFilter(filterName: "Price Index");
   RangeFilter prices = RangeFilter(filterName: "Price");
+  RangeFilter volumes = RangeFilter(filterName: "Volume");
+  RangeFilter alcoholContents = RangeFilter.fromInitialVals(minVal: 0, maxVal: 100, filterName: "Alcohol Content");
 }

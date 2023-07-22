@@ -30,6 +30,8 @@ class _SearchScreenState extends State<SearchScreen> {
   TextEditingController _minPriceController = TextEditingController();
   TextEditingController _maxPriceController = TextEditingController();
 
+  TextEditingController _minVolumeController = TextEditingController();
+  TextEditingController _maxVolumeController = TextEditingController();
 
   Widget _createFilterFormFieldRow(TextEditingController minController, TextEditingController maxController, RangeFilter range){
     return Row(
@@ -95,6 +97,32 @@ class _SearchScreenState extends State<SearchScreen> {
         _createFilterFormFieldRow(minController, maxController, range)
       ],
     );
+  }
+
+  Widget _createFilterRangeSlider(RangeFilter range){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _createFilterFormFieldHeader(widget.filters.alcoholContents),
+        RangeSlider(
+          values: RangeValues(widget.filters.alcoholContents.minVal!,
+              widget.filters.alcoholContents.maxVal!),
+          max: 100,
+          divisions: 50,
+          labels: RangeLabels(
+            widget.filters.alcoholContents.minVal!.round().toString(),
+            widget.filters.alcoholContents.maxVal!.round().toString(),
+          ),
+          onChanged: widget.filters.alcoholContents.enabled ? (RangeValues values) {
+            setState(() {
+              widget.filters.alcoholContents.minVal = values.start;
+              widget.filters.alcoholContents.maxVal = values.end;
+            });
+          } : null,
+        )
+      ],
+    );
+
   }
 
   @override
@@ -168,6 +196,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                   ),
                                   _createFilterFormField(_minPriceIndexController, _maxPriceIndexController, widget.filters.priceIndices),
                                   _createFilterFormField(_minPriceController, _maxPriceController, widget.filters.prices),
+                                  _createFilterFormField(_minVolumeController, _maxVolumeController, widget.filters.volumes),
+                                  _createFilterRangeSlider(widget.filters.alcoholContents),
                                   const SizedBox(height: 10,),
                                   TextButton(
                                     style: ButtonStyle(
@@ -255,6 +285,10 @@ class _SearchScreenState extends State<SearchScreen> {
   void dispose() {
     _minPriceIndexController.dispose();
     _maxPriceIndexController.dispose();
+    _minPriceController.dispose();
+    _maxPriceController.dispose();
+    _minVolumeController.dispose();
+    _maxVolumeController.dispose();
     super.dispose();
   }
 }
