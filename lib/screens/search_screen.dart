@@ -224,7 +224,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      const Hero(
+                      Hero(
                         tag: 'heroSearchBar',
                         child: SearchBarCustom(),
                       ),

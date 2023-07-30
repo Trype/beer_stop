@@ -177,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
         return SearchScreen(filters: AlcoholFilters());
         }))
         },
-        child: const Hero(
+        child: Hero(
           tag: 'heroSearchBar',
           child: SearchBarCustom(enabled: false),
         ),

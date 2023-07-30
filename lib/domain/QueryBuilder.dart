@@ -1,9 +1,10 @@
 import 'package:beer_stop/data/AlcoholFilters.dart';
 import 'package:beer_stop/network/AlcoholNetwork.dart';
 
-String buildQuery(AlcoholFilters? filters){
-  if(filters == null) return AlcoholNetwork.base_url;
+String buildQuery(AlcoholFilters? filters, String? searchQuery){
   String query = AlcoholNetwork.base_url;
+  if(searchQuery != null) query += "&search=${_encodeUrl(searchQuery)}";
+  if(filters == null) return query;
   // filters.categorySelection.asMap().forEach((i, selected) {
   //   if(selected) {
   //     String formattedCategory = AlcoholFilters.CATEGORIES[i].replaceAll("&", "%26");
@@ -18,4 +19,10 @@ String buildQuery(AlcoholFilters? filters){
   if(filters.volumes.maxVal != null && filters.volumes.enabled) query += "&maxVolume=${filters.volumes.maxVal}";
   if(filters.alcoholContents.enabled) query += "&minVolume=${filters.volumes.minVal}&maxVolume=${filters.volumes.maxVal}";
   return query;
+}
+
+String _encodeUrl(String query){
+  String encoded = query.replaceAll("&", "%26");
+  encoded = encoded.replaceAll("’", "%27");
+  return encoded;
 }
