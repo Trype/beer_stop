@@ -224,9 +224,13 @@ class _SearchScreenState extends State<SearchScreen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      const Hero(
+                      Hero(
                         tag: 'heroSearchBar',
-                        child: SearchBarCustom(),
+                        child: SearchBarCustom(callback: (List<Alcohol> suggested) {
+                          setState(() {
+                            _listFetcher = Future.value(suggested);
+                          });
+                        },),
                       ),
                       const SizedBox(
                         height: 20,

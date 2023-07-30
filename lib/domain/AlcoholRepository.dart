@@ -28,10 +28,19 @@ class AlcoholRepository {
 
   Future<List<Alcohol>> updateAlcoholList({AlcoholFilters? filters, bool filtersChanged = false}) async{
     try{
-      List<Alcohol> efficientAlcohols = await alcoholApi.fetchAlcohols(buildQuery(filters));
+      List<Alcohol> efficientAlcohols = await alcoholApi.fetchAlcohols(buildQuery(filters, null));
       if(filtersChanged) _displayList.clear();
       _displayList.addAll(efficientAlcohols);
       return _displayList;
+    } on Exception {
+      throw Exception(_displayList);
+    }
+  }
+
+  Future<List<Alcohol>> fetchSuggestions(String query) async{
+    try{
+      List<Alcohol> efficientAlcohols = await alcoholApi.fetchAlcohols(buildQuery(null, query));
+      return efficientAlcohols;
     } on Exception {
       throw Exception(_displayList);
     }
