@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 import '../data/Alcohol.dart';
 
 class SearchBarCustom extends StatefulWidget {
-  SearchBarCustom({Key? key, this.enabled = true}) : super(key: key);
+  SearchBarCustom({Key? key, this.enabled = true, this.callback}) : super(key: key);
 
   final bool enabled;
 
   final AlcoholRepository repository = AlcoholRepository();
+
+  final Function(List<Alcohol>)? callback;
 
   @override
   _SearchBarCustomState createState() => _SearchBarCustomState();
@@ -20,6 +22,7 @@ class _SearchBarCustomState extends State<SearchBarCustom> {
 
   String _displayStringForOption(Alcohol option) => option.title;
   Timer? _debounce;
+  List<Alcohol> _suggested = List.empty();
 
   // void _onSearchChanged(String query) async{
   //
@@ -44,8 +47,8 @@ class _SearchBarCustomState extends State<SearchBarCustom> {
         //   List<Alcohol> _tempSuggestionList = await widget.repository.fetchSuggestions(textEditingValue.text);
         //   return _tempSuggestionList;
         // });
-        List<Alcohol> tempSuggested = await widget.repository.fetchSuggestions(textEditingValue.text);
-        return tempSuggested.length > 5 ? tempSuggested.getRange(0, 5) : tempSuggested;
+        _suggested = await widget.repository.fetchSuggestions(textEditingValue.text);
+        return _suggested.length > 5 ? _suggested.getRange(0, 5) : _suggested;
       },
       displayStringForOption: _displayStringForOption,
       onSelected: (Alcohol selection) {
@@ -84,6 +87,9 @@ class _SearchBarCustomState extends State<SearchBarCustom> {
               ),
             ),
             enabled: widget.enabled,
+            onSubmitted: (String text) {
+              if(widget.callback != null) widget.callback!(_suggested);
+            },
           ),
         );
       },
@@ -108,7 +114,10 @@ class _SearchBarCustomState extends State<SearchBarCustom> {
               itemBuilder: (BuildContext context, int index) {
                 final Alcohol option = options.elementAt(index);
                 return InkWell(
-                  onTap: () => onSelected(option),
+                  onTap: () => {
+                    onSelected(option),
+                    if(widget.callback != null) widget.callback!(_suggested)
+                  },
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text(option.title),
