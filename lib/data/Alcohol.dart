@@ -11,6 +11,8 @@ class Alcohol {
   final double priceIndex;
   final double alcoholContent;
   final String? country;
+  final double rating;
+  final String? description;
 
   const Alcohol({
     required this.permanentId,
@@ -24,7 +26,9 @@ class Alcohol {
     required this.priceIndex,
     required this.country,
     required this.subcategory,
-    required this.volume
+    required this.volume,
+    required this.rating,
+    required this.description
   });
 
   factory Alcohol.fromJson(Map<String, dynamic> json) {
@@ -40,7 +44,9 @@ class Alcohol {
       price: json['price'].toDouble(),
       priceIndex: json['price_index'].toDouble(),
       country: json['country'],
-      volume: json['volume'].toDouble()
+      volume: json['volume'].toDouble(),
+      rating: json['rating'] != null ? json['rating'].toDouble() : 0.0,
+      description: json['description']
     );
   }
 

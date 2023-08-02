@@ -1,5 +1,6 @@
 import 'package:beer_stop/data/AlcoholFilters.dart';
 import 'package:beer_stop/domain/AlcoholRepository.dart';
+import 'package:beer_stop/screens/alcohol_description_screen.dart';
 import 'package:beer_stop/screens/search_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -159,7 +160,10 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, snapshot) {
                 if(snapshot.hasData){
                   return MostEfficientAlcoholCard(snapshot.data!.title, "Cheapest way to get absolutely plastered",
-                      snapshot.data!.thumbnailUrl, "images/bottle.svg", () => {});
+                      snapshot.data!.thumbnailUrl, "images/bottle.svg", () => Navigator.push(context, MaterialPageRoute(builder: (context) {
+                          return AlcoholDescriptionScreen(alcohol: snapshot.data!,);
+                        }))
+                      );
                 } else if(snapshot.hasError){
                   return MostEfficientAlcoholCard("Could not load data", "Tap to reload",
                         null, "images/bottle.svg", () => setState(() {
