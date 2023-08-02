@@ -1,7 +1,7 @@
 import 'package:beer_stop/data/AlcoholFilters.dart';
 import 'package:beer_stop/network/AlcoholNetwork.dart';
 
-String buildQuery(AlcoholFilters? filters, String? searchQuery){
+String buildQuery(AlcoholFilters? filters, String? searchQuery, int page){
   String query = AlcoholNetwork.base_url;
   if(searchQuery != null) query += "&search=${_encodeUrl(searchQuery)}";
   if(filters == null) return query;
@@ -18,6 +18,7 @@ String buildQuery(AlcoholFilters? filters, String? searchQuery){
   if(filters.volumes.minVal != null && filters.volumes.enabled) query += "&minVolume=${filters.volumes.minVal}";
   if(filters.volumes.maxVal != null && filters.volumes.enabled) query += "&maxVolume=${filters.volumes.maxVal}";
   if(filters.alcoholContents.enabled) query += "&minVolume=${filters.volumes.minVal}&maxVolume=${filters.volumes.maxVal}";
+  query += "&page=$page";
   return query;
 }
 

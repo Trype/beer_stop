@@ -23,6 +23,8 @@ class _SearchScreenState extends State<SearchScreen> {
   List<Alcohol> _tempDisplayList = List.empty();
   bool menuToggle = false;
   final _formKey = GlobalKey<FormState>();
+  bool _searchNoFilters = false;
+  String? _searchQuery;
 
   TextEditingController _minPriceIndexController = TextEditingController();
   TextEditingController _maxPriceIndexController = TextEditingController();
@@ -32,6 +34,8 @@ class _SearchScreenState extends State<SearchScreen> {
 
   TextEditingController _minVolumeController = TextEditingController();
   TextEditingController _maxVolumeController = TextEditingController();
+
+  ScrollController _scrollController = ScrollController();
 
   Widget _createFilterFormFieldRow(TextEditingController minController, TextEditingController maxController, RangeFilter range){
     return Row(
@@ -130,6 +134,17 @@ class _SearchScreenState extends State<SearchScreen> {
     super.initState();
     _listFetcher = repository.updateAlcoholList(
         filters: widget.filters, filtersChanged: true);
+    _scrollController.addListener(() {
+      if (_scrollController.position.maxScrollExtent ==
+          _scrollController.position.pixels) {
+        setState(() {
+          _listFetcher = repository.updateAlcoholList(
+              filters: _searchNoFilters ? null : widget.filters,
+              searchQuery: _searchQuery
+          );
+        });
+      }
+    });
   }
 
   @override
@@ -209,11 +224,13 @@ class _SearchScreenState extends State<SearchScreen> {
                                       setState(() {
                                         if(_formKey.currentState!.validate()){
                                           FocusScope.of(context).requestFocus(FocusNode());
+                                          _searchNoFilters = false;
                                           _listFetcher =
                                               repository.updateAlcoholList(
                                                   filters: widget.filters,
-                                                  filtersChanged: true);
+                                                  filtersChanged: true, searchQuery: _searchQuery);
                                         }
+                                        _scrollController.jumpTo(_scrollController.position.minScrollExtent);
                                       });
                                     },
                                     child: const Text('Apply Filters'),
@@ -226,9 +243,12 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                       Hero(
                         tag: 'heroSearchBar',
-                        child: SearchBarCustom(callback: (List<Alcohol> suggested) {
+                        child: SearchBarCustom(callback: (String searchQuery) {
                           setState(() {
-                            _listFetcher = Future.value(suggested);
+                            _searchQuery = searchQuery;
+                            _searchNoFilters = true;
+                            _listFetcher = repository.updateAlcoholList(filtersChanged: true, searchQuery: _searchQuery);
+                            _scrollController.jumpTo(_scrollController.position.minScrollExtent);
                           });
                         },),
                       ),
@@ -253,6 +273,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 34.5),
                       child: ListView.builder(
                           itemCount: _tempDisplayList.length,
+                          controller: _scrollController,
                           itemBuilder: (BuildContext context, int index) {
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
@@ -293,6 +314,7 @@ class _SearchScreenState extends State<SearchScreen> {
     _maxPriceController.dispose();
     _minVolumeController.dispose();
     _maxVolumeController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 }
