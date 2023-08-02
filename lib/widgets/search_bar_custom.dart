@@ -12,7 +12,7 @@ class SearchBarCustom extends StatefulWidget {
 
   final AlcoholRepository repository = AlcoholRepository();
 
-  final Function(List<Alcohol>)? callback;
+  final Function(String)? callback;
 
   @override
   _SearchBarCustomState createState() => _SearchBarCustomState();
@@ -88,7 +88,7 @@ class _SearchBarCustomState extends State<SearchBarCustom> {
             ),
             enabled: widget.enabled,
             onSubmitted: (String text) {
-              if(widget.callback != null) widget.callback!(_suggested);
+              if(widget.callback != null) widget.callback!(text);
             },
           ),
         );
@@ -116,7 +116,7 @@ class _SearchBarCustomState extends State<SearchBarCustom> {
                 return InkWell(
                   onTap: () => {
                     onSelected(option),
-                    if(widget.callback != null) widget.callback!(_suggested)
+                    if(widget.callback != null) widget.callback!(option.title)
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),

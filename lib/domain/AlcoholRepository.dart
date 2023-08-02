@@ -1,3 +1,4 @@
+import 'package:beer_stop/data/AlcoholData.dart';
 import 'package:beer_stop/data/AlcoholFilters.dart';
 import 'package:beer_stop/domain/QueryBuilder.dart';
 import 'package:beer_stop/network/AlcoholNetwork.dart';
@@ -11,6 +12,9 @@ class AlcoholRepository {
 
   static final List<Alcohol> _displayList = List.empty(growable: true);
 
+  int _page = 1;
+  int? lastPage;
+
   factory AlcoholRepository() {
     return _instance;
   }
@@ -19,19 +23,27 @@ class AlcoholRepository {
 
   Future<Alcohol> fetchMostEfficientAlcohol() async{
     try{
-      List<Alcohol> efficientAlcohols = await alcoholApi.fetchAlcohols(AlcoholNetwork.base_url);
-      return efficientAlcohols.first;
+      AlcoholData data = await alcoholApi.fetchAlcohols(AlcoholNetwork.base_url);
+      return data.alcohols.first;
     } on Exception catch(e) {
         throw Exception(e);
     }
   }
 
-  Future<List<Alcohol>> updateAlcoholList({AlcoholFilters? filters, bool filtersChanged = false}) async{
+  Future<List<Alcohol>> updateAlcoholList({AlcoholFilters? filters, bool filtersChanged = false, String? searchQuery}) async{
+    if(lastPage != null && _page > lastPage! && !filtersChanged) return Future.value(_displayList);
     try{
-      List<Alcohol> efficientAlcohols = await alcoholApi.fetchAlcohols(buildQuery(filters, null));
-      if(filtersChanged) _displayList.clear();
-      _displayList.addAll(efficientAlcohols);
-      return _displayList;
+      if(filtersChanged) {
+        _displayList.clear();
+        _page = 1;
+        lastPage = null;
+      }
+      AlcoholData data = await alcoholApi.fetchAlcohols(buildQuery(filters, searchQuery, _page));
+      List<Alcohol> efficientAlcohols = data.alcohols;
+      lastPage = data.lastPage;
+        _displayList.addAll(efficientAlcohols);
+        _page++;
+        return _displayList;
     } on Exception {
       throw Exception(_displayList);
     }
@@ -39,7 +51,8 @@ class AlcoholRepository {
 
   Future<List<Alcohol>> fetchSuggestions(String query) async{
     try{
-      List<Alcohol> efficientAlcohols = await alcoholApi.fetchAlcohols(buildQuery(null, query));
+      AlcoholData data = await alcoholApi.fetchAlcohols(buildQuery(null, query, 1));
+      List<Alcohol> efficientAlcohols = data.alcohols;
       return efficientAlcohols;
     } on Exception {
       throw Exception(_displayList);
