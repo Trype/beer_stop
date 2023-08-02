@@ -27,9 +27,9 @@ class AlcoholNetwork {
       Iterable i = jsonDecode(response.body)['data'];
       int lastPage = jsonDecode(response.body)['meta']['last_page'];
       List<Alcohol> alcohols = List.empty(growable: true);
-      for(var alcohol in i){
-        alcohols.add(Alcohol.fromJson(alcohol));
-      }
+        for(var alcohol in i){
+          alcohols.add(Alcohol.fromJson(alcohol));
+        }
       return AlcoholData(alcohols: alcohols, lastPage: lastPage);
     } else {
       // If the server did not return a 200 OK response,

@@ -66,7 +66,7 @@ class AlcoholDescriptionCard extends StatelessWidget {
                         fontWeight: FontWeight.w700
                     ), textAlign: TextAlign.center,),
                     Padding(padding: EdgeInsets.symmetric(vertical: 10),
-                      child: Text("TODO", style: const TextStyle(
+                      child: Text("\$${alcohol.priceIndex.toStringAsFixed(3)}/mL", style: const TextStyle(
                           color: Colors.black,
                           fontSize: 9.5,
                           fontFamily: 'Raleway',
