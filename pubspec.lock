@@ -134,6 +134,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.3.1"
+  flutter_extensions:
+    dependency: "direct main"
+    description:
+      name: flutter_extensions
+      sha256: d94cddc93cd23372a1096ce75d711f4bab1be9ae576260f87d54e50af97d0238
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -219,6 +227,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.9.1"
+  nested:
+    dependency: transitive
+    description:
+      name: nested
+      sha256: "03bac4c528c64c95c722ec99280375a6f2fc708eec17c7b3f07253b626cd2a20"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   octo_image:
     dependency: transitive
     description:
@@ -315,6 +331,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  provider:
+    dependency: transitive
+    description:
+      name: provider
+      sha256: cdbe7530b12ecd9eb455bdaa2fcb8d4dad22e80b8afb4798b41479d5ce26847f
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.0.5"
   rxdart:
     dependency: transitive
     description:
@@ -482,4 +506,4 @@ packages:
     version: "6.3.0"
 sdks:
   dart: ">=3.0.6 <4.0.0"
-  flutter: ">=3.7.0-0"
+  flutter: ">=3.7.0"

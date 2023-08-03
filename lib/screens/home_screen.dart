@@ -161,7 +161,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 if(snapshot.hasData){
                   return MostEfficientAlcoholCard(snapshot.data!.title, "Cheapest way to get absolutely plastered",
                       snapshot.data!.thumbnailUrl, "images/bottle.svg", () => Navigator.push(context, MaterialPageRoute(builder: (context) {
-                          return AlcoholDescriptionScreen(alcohol: snapshot.data!,);
+                          return AlcoholDescriptionScreen(alcohol: snapshot.data!, maxHeight: MediaQuery.of(context).size.height, maxWidth: MediaQuery.of(context).size.width,);
                         }))
                       );
                 } else if(snapshot.hasError){

@@ -1,19 +1,68 @@
 import 'package:beer_stop/data/Alcohol.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_extensions/flutter_extensions.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class AlcoholDescriptionScreen extends StatefulWidget {
-  const AlcoholDescriptionScreen({Key? key, required this.alcohol}) : super(key: key);
+  const AlcoholDescriptionScreen({Key? key, required this.alcohol, required this.maxHeight, required this.maxWidth}) : super(key: key);
 
   final Alcohol alcohol;
+  final double maxHeight;
+  final double maxWidth;
 
   @override
   _AlcoholDescriptionScreenState createState() =>
       _AlcoholDescriptionScreenState();
 }
 
-class _AlcoholDescriptionScreenState extends State<AlcoholDescriptionScreen> {
+class _AlcoholDescriptionScreenState extends State<AlcoholDescriptionScreen> with TickerProviderStateMixin{
+
+  final DecorationTween decorationTween = DecorationTween(
+    begin: BoxDecoration(
+      color: const Color(0xFFFFFFFF),
+      border: Border.all(style: BorderStyle.none),
+      borderRadius: BorderRadius.circular(100.0),
+      boxShadow: const <BoxShadow>[
+        BoxShadow(
+          color: Color(0x66666666),
+          blurRadius: 10.0,
+          spreadRadius: 3.0,
+          offset: Offset(0, 6.0),
+        ),
+      ],
+    ),
+    end: BoxDecoration(
+      color: const Color(0xFFFFFFFF),
+      border: Border.all(
+        style: BorderStyle.none,
+      ),
+      borderRadius: BorderRadius.zero,
+      // No shadow.
+    ),
+  );
+
+  late OffsetTween offsetTween;
+  late SizeTween sizeTween;
+
+  late Animation _animation;
+  late Animation _offsetAnimation;
+  late Animation _sizeAnimation;
+
+  late AnimationController _controller;
+
+  @override
+  void initState(){
+    super.initState();
+    sizeTween = SizeTween(begin: const Size(130, 130), end: Size(widget.maxWidth, widget.maxHeight));
+    offsetTween = OffsetTween(begin: Offset(-75.0, widget.maxHeight/3.5), end: const Offset(0,0));
+    _controller = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
+    _animation = decorationTween.animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut))..addListener(() {setState(() {
+
+    });});
+    _offsetAnimation = offsetTween.animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+    _sizeAnimation = sizeTween.animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+  }
 
   Widget SmallDescription(String title, String text){
     return Column(
@@ -54,18 +103,16 @@ class _AlcoholDescriptionScreenState extends State<AlcoholDescriptionScreen> {
   }
 
   Widget _createCircularImage(){
-    return GestureDetector(
-        onTap: () => {},
-        child: ClipOval(
+    return  Container(
+      decoration: _animation.value,
+      clipBehavior: Clip.hardEdge,
+      width: (_sizeAnimation.value as Size).width,
+      height: (_sizeAnimation.value as Size).height,
             child:
             FadeInImage(placeholder: MemoryImage(kTransparentImage),
-                width: 150,
-                height: 150,
-                fit: BoxFit.cover,
+                fit: BoxFit.contain,
                 image: NetworkImage(widget.alcohol.imageUrl!)),
-          ),
-
-    );
+          );
 
   }
 
@@ -152,29 +199,38 @@ class _AlcoholDescriptionScreenState extends State<AlcoholDescriptionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return GestureDetector(
+        onHorizontalDragUpdate: (details){
+          if(details.delta.dx > 0 && _controller.status != AnimationStatus.forward){
+            _controller.forward();
+          }
+          else if(details.delta.dx < 0 && _controller.status != AnimationStatus.reverse){
+            _controller.reverse();
+          }
+        },
+        child: Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         elevation: 0,
       ),
-        body: LayoutBuilder(
-          builder: (context, constraints) => Stack(
-            children: [
-              _createDescriptionColumn(),
-              Positioned(
-                  left: -75,
-                  top: constraints.maxHeight/3.5,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      _createCircularImage(),
-                      // const Icon(Icons.arrow_forward_ios)
-                    ],
-                  ))
-
-            ],
+        body:  LayoutBuilder(
+            builder: (context, constraints) => Stack(
+              children: [
+                _createDescriptionColumn(),
+                Positioned(
+                    left: (_offsetAnimation.value as Offset).dx,
+                    top: (_offsetAnimation.value as Offset).dy,
+                    child: _createCircularImage(),)
+              ],
+            ),
           ),
         )
     );
+  }
+
+  @override
+  void dispose(){
+    _controller.dispose();
+    super.dispose();
   }
 }
