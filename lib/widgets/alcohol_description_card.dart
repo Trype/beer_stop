@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../data/Alcohol.dart';
+import '../screens/alcohol_description_screen.dart';
 
 class AlcoholDescriptionCard extends StatelessWidget {
   const AlcoholDescriptionCard({Key? key, required this.alcohol}) : super(key: key);
@@ -21,7 +22,11 @@ class AlcoholDescriptionCard extends StatelessWidget {
             ),
           ),
           child: InkWell(
-            onTap: () => {},
+            onTap: () => {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return AlcoholDescriptionScreen(alcohol: alcohol, maxHeight: MediaQuery.of(context).size.height, maxWidth: MediaQuery.of(context).size.width,);
+            }))
+            },
             child: Row(
               children: [
                 Padding(

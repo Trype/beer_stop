@@ -55,7 +55,7 @@ class _AlcoholDescriptionScreenState extends State<AlcoholDescriptionScreen> wit
   void initState(){
     super.initState();
     sizeTween = SizeTween(begin: const Size(130, 130), end: Size(widget.maxWidth, widget.maxHeight));
-    offsetTween = OffsetTween(begin: Offset(-75.0, widget.maxHeight/3.5), end: const Offset(0,0));
+    offsetTween = OffsetTween(begin: Offset(-65.0, widget.maxHeight/3.5), end: const Offset(0,0));
     _controller = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
     _animation = decorationTween.animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut))..addListener(() {setState(() {
 
@@ -109,7 +109,7 @@ class _AlcoholDescriptionScreenState extends State<AlcoholDescriptionScreen> wit
       width: (_sizeAnimation.value as Size).width,
       height: (_sizeAnimation.value as Size).height,
             child:
-            FadeInImage(placeholder: MemoryImage(kTransparentImage),
+            FadeInImage(placeholder: MemoryImage(kTransparentImage), //todo handle placeholder
                 fit: BoxFit.contain,
                 image: NetworkImage(widget.alcohol.imageUrl!)),
           );
@@ -118,7 +118,7 @@ class _AlcoholDescriptionScreenState extends State<AlcoholDescriptionScreen> wit
 
   Widget _createDescriptionColumn(){
     return Padding(
-                padding: EdgeInsets.only(right: 10),
+                padding: EdgeInsets.symmetric(horizontal: 10),
                 child: Column(mainAxisSize: MainAxisSize.max,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -128,7 +128,7 @@ class _AlcoholDescriptionScreenState extends State<AlcoholDescriptionScreen> wit
                         fontSize: 32,
                         fontFamily: 'Playfair Display',
                         fontWeight: FontWeight.w700
-                    )),
+                    ), textAlign: TextAlign.center,),
                     const SizedBox(height: 20,),
                     Text(
                       widget.alcohol.brand != null ? widget.alcohol.brand! : "Generic",
@@ -181,7 +181,7 @@ class _AlcoholDescriptionScreenState extends State<AlcoholDescriptionScreen> wit
                         ),
                         SizedBox(height: 5,),
                         Text(
-                          "${widget.alcohol.priceIndex}/mL",
+                          "${widget.alcohol.priceIndex.toStringAsFixed(3)}/mL",
                           style: TextStyle(
                               color: priceIndexColor(widget.alcohol.priceIndex),
                               fontSize: 30,
