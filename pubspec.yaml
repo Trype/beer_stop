@@ -41,6 +41,7 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   transparent_image: ^2.0.1
   flutter_extensions: ^5.0.0
+  shared_preferences: ^2.2.0
 
 dev_dependencies:
   flutter_test:

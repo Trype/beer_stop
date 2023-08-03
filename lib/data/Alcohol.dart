@@ -50,6 +50,23 @@ class Alcohol {
     );
   }
 
+  Map<String, dynamic> toJson() => {
+    "permanent_id": permanentId,
+    "title": title,
+    "brand": brand,
+    "thumbnail_url": thumbnailUrl,
+    "image_url": imageUrl,
+    "category": category,
+    "subcategory": subcategory,
+    "alcohol_content": alcoholContent,
+    "price": price,
+    "price_index": priceIndex,
+    "country": country,
+    "volume": volume,
+    "rating": rating,
+    "description": description,
+  };
+
   @override
   String toString() {
     return title;
