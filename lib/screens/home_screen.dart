@@ -168,9 +168,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       snapshot.data!.thumbnailUrl, "images/bottle.svg", () => context.go(AlcoholDescriptionScreen
                           .createRoute(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height), extra: snapshot.data)
                       );
-                  // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  //   return AlcoholDescriptionScreen(alcohol: snapshot.data!, maxHeight: MediaQuery.of(context).size.height, maxWidth: MediaQuery.of(context).size.width,);
-                  // }))
                 } else if(snapshot.hasError){
                   return MostEfficientAlcoholCard("Could not load data", "Tap to reload",
                         null, "images/bottle.svg", () => setState(() {

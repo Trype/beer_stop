@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 
 import '../data/Alcohol.dart';
 import '../screens/alcohol_description_screen.dart';
@@ -23,9 +24,8 @@ class AlcoholDescriptionCard extends StatelessWidget {
           ),
           child: InkWell(
             onTap: () => {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return AlcoholDescriptionScreen(alcohol: alcohol, maxHeight: MediaQuery.of(context).size.height, maxWidth: MediaQuery.of(context).size.width,);
-            }))
+              context.go(AlcoholDescriptionScreen
+                  .createRoute(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height), extra: alcohol)
             },
             child: Row(
               children: [
