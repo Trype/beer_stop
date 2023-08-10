@@ -45,7 +45,8 @@ final goRouter = GoRouter(
                   path: AlcoholDescriptionScreen.route,
                   builder: (context, state)
                   {
-                    Alcohol alcohol = state.extra as Alcohol;
+                    Alcohol alcohol = state.extra is Alcohol ? state.extra as Alcohol :
+                    Alcohol.fromJson(state.extra as Map<String, dynamic>);
                     return AlcoholDescriptionScreen(alcohol: alcohol,
                         maxHeight: double.parse(state.pathParameters['maxWidth']!),
                         maxWidth: double.parse(state.pathParameters['maxHeight']!));
@@ -73,7 +74,9 @@ final goRouter = GoRouter(
                 GoRoute(
                   path: AlcoholDescriptionScreen.route,
                   builder: (context, state) {
-                    return AlcoholDescriptionScreen(alcohol: state.extra as Alcohol,
+                    Alcohol alcohol = state.extra is Alcohol ? state.extra as Alcohol :
+                    Alcohol.fromJson(state.extra as Map<String, dynamic>);
+                    return AlcoholDescriptionScreen(alcohol: alcohol,
                         maxHeight: double.parse(state.pathParameters['maxWidth']!),
                         maxWidth: double.parse(state.pathParameters['maxHeight']!));
                   }
@@ -98,7 +101,8 @@ final goRouter = GoRouter(
                 GoRoute(
                     path: AlcoholDescriptionScreen.route,
                     builder: (context, state) {
-                      Alcohol alcohol = state.extra as Alcohol;
+                      Alcohol alcohol = state.extra is Alcohol ? state.extra as Alcohol :
+                      Alcohol.fromJson(state.extra as Map<String, dynamic>);
                       return AlcoholDescriptionScreen(alcohol: alcohol,
                           maxHeight: double.parse(state.pathParameters['maxWidth']!),
                           maxWidth: double.parse(state.pathParameters['maxHeight']!));

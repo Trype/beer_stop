@@ -15,7 +15,7 @@ class NavigationRoot extends StatelessWidget {
   void _goBranch(int index) {
     navigationShell.goBranch(
       index,
-      initialLocation: true,
+      initialLocation: index == navigationShell.currentIndex,
     );
   }
 
