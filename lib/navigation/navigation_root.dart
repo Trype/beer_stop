@@ -15,7 +15,7 @@ class NavigationRoot extends StatelessWidget {
   void _goBranch(int index) {
     navigationShell.goBranch(
       index,
-      initialLocation: index == navigationShell.currentIndex,
+      initialLocation: true,
     );
   }
 
@@ -26,8 +26,9 @@ class NavigationRoot extends StatelessWidget {
       bottomNavigationBar: NavigationBar(
         selectedIndex: navigationShell.currentIndex,
         destinations: const [
-          NavigationDestination(label: 'Home', icon: Icon(Icons.search)),
-          NavigationDestination(label: 'Search', icon: Icon(Icons.home)),
+          NavigationDestination(label: 'Home', icon: Icon(Icons.home)),
+          NavigationDestination(label: 'Search', icon: Icon(Icons.search)),
+          NavigationDestination(label: 'Search', icon: Icon(Icons.favorite)),
         ],
         onDestinationSelected: _goBranch,
       ),

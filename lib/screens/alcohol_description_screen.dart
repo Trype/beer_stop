@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:beer_stop/data/Alcohol.dart';
+import 'package:beer_stop/domain/GlobalSettings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_extensions/flutter_extensions.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -20,14 +21,15 @@ class AlcoholDescriptionScreen extends StatefulWidget {
 
   static String route = 'details/:maxWidth/:maxHeight';
 
-  static String createRoute(double maxWidth, double maxHeight) => 'details/$maxWidth/$maxHeight';
+  static String createRoute(double maxWidth, double maxHeight) => '/details/${maxWidth.toString()}/${maxWidth.toString()}';
 
 }
 
 class _AlcoholDescriptionScreenState extends State<AlcoholDescriptionScreen> with TickerProviderStateMixin{
 
   bool _liked = false;
-  SharedPreferences? prefs;
+  GlobalSettings settings = GlobalSettings();
+
 
   final DecorationTween decorationTween = DecorationTween(
     begin: BoxDecoration(
@@ -62,14 +64,6 @@ class _AlcoholDescriptionScreenState extends State<AlcoholDescriptionScreen> wit
 
   late AnimationController _controller;
 
-  void _initializePrefs() async{
-    prefs = await SharedPreferences.getInstance();
-    if(prefs!.containsKey(widget.alcohol.permanentId.toString())){
-      setState(() {
-        _liked = true;
-      });
-    }
-  }
 
   @override
   void initState(){
@@ -82,7 +76,7 @@ class _AlcoholDescriptionScreenState extends State<AlcoholDescriptionScreen> wit
     });});
     _offsetAnimation = offsetTween.animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
     _sizeAnimation = sizeTween.animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-    _initializePrefs();
+    _liked = settings.isAlcoholLiked(widget.alcohol);
   }
 
   Widget SmallDescription(String title, String text){
@@ -190,16 +184,10 @@ class _AlcoholDescriptionScreenState extends State<AlcoholDescriptionScreen> wit
                             setState(() {
                             _liked = !_liked;
                           });
-                            if(prefs == null) return;
                             if(_liked) {
-                              final alcoholEncode = jsonEncode(
-                                  widget.alcohol.toJson());
-                              prefs!.setString(
-                                  widget.alcohol.permanentId.toString(),
-                                  alcoholEncode);
-                            }
-                            else{
-                              prefs!.remove(widget.alcohol.permanentId.toString());
+                              settings.saveLikedAlcohol(widget.alcohol);
+                            } else {
+                              settings.removeLikedAlcohol(widget.alcohol);
                             }
                             },
                           child: Icon(_liked ?  Icons.favorite : Icons.favorite_border, size: 30,

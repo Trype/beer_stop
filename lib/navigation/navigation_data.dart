@@ -4,18 +4,21 @@ import 'package:beer_stop/data/AlcoholFilters.dart';
 import 'package:beer_stop/navigation/navigation_root.dart';
 import 'package:beer_stop/screens/alcohol_description_screen.dart';
 import 'package:beer_stop/screens/home_screen.dart';
+import 'package:beer_stop/screens/liked_screen.dart';
 import 'package:beer_stop/screens/search_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
-final _shellNavigatorHomeKey = GlobalKey<NavigatorState>(debugLabel: 'shellA');
-final _shellNavigatorSearchKey = GlobalKey<NavigatorState>(debugLabel: 'shellB');
+final _shellNavigatorHomeKey = GlobalKey<NavigatorState>(debugLabel: 'shellHome');
+final _shellNavigatorSearchKey = GlobalKey<NavigatorState>(debugLabel: 'shellSearch');
+final _shellNavigatorLikedKey = GlobalKey<NavigatorState>(debugLabel: 'shellLiked');
 
 // the one and only GoRouter instance
 final goRouter = GoRouter(
-  initialLocation: '/home',
+  initialLocation: HomeScreen.route,
   navigatorKey: _rootNavigatorKey,
+  debugLogDiagnostics: true,
   routes: [
     // Stateful nested navigation based on:
     // https://github.com/flutter/packages/blob/main/packages/go_router/example/lib/stateful_shell_route.dart
@@ -60,9 +63,9 @@ final goRouter = GoRouter(
             GoRoute(
               path: SearchScreen.route,
                 pageBuilder: (context, state) {
-                AlcoholFilters filters = (state.extra ?? AlcoholFilters()) as AlcoholFilters ;
-                return NoTransitionPage(
-                  child: SearchScreen(filters: filters),
+
+                  return const NoTransitionPage(
+                  child: SearchScreen()
                 );
                 },
               routes: [
@@ -70,11 +73,36 @@ final goRouter = GoRouter(
                 GoRoute(
                   path: AlcoholDescriptionScreen.route,
                   builder: (context, state) {
-                    Alcohol alcohol = state.extra as Alcohol;
-                    return AlcoholDescriptionScreen(alcohol: alcohol,
+                    return AlcoholDescriptionScreen(alcohol: state.extra as Alcohol,
                         maxHeight: double.parse(state.pathParameters['maxWidth']!),
                         maxWidth: double.parse(state.pathParameters['maxHeight']!));
                   }
+                ),
+              ],
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          navigatorKey: _shellNavigatorLikedKey,
+          routes: [
+            // top route inside branch
+            GoRoute(
+              path: LikedScreen.route,
+              pageBuilder: (context, state) {
+                return const NoTransitionPage(
+                  child: LikedScreen(),
+                );
+              },
+              routes: [
+                // child route
+                GoRoute(
+                    path: AlcoholDescriptionScreen.route,
+                    builder: (context, state) {
+                      Alcohol alcohol = state.extra as Alcohol;
+                      return AlcoholDescriptionScreen(alcohol: alcohol,
+                          maxHeight: double.parse(state.pathParameters['maxWidth']!),
+                          maxWidth: double.parse(state.pathParameters['maxHeight']!));
+                    }
                 ),
               ],
             ),

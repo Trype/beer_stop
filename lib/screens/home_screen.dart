@@ -18,7 +18,7 @@ class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 
-  static String route = '/home';
+  static String route = '/';
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -183,10 +183,8 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: () => {
           (NavigationRoot.of(context)!.nShell as StatefulNavigationShell).goBranch(1, initialLocation: true)
         },
-        child: Hero(
-          tag: 'heroSearchBar',
           child: SearchBarCustom(enabled: false),
-        ),
+
       ),
           const SizedBox(height: 30,),
           const Text(
@@ -203,16 +201,16 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CategoryCard(AlcoholFilters.CATEGORIES[0], "images/wine_glass.svg", () {
-                context.go(SearchScreen.route, extra: AlcoholFilters.fromCategory(AlcoholFilters.CATEGORIES[0]));
+                context.go('${SearchScreen.route}?category=${AlcoholFilters.CATEGORIES[0]}');
               }),
               CategoryCard(AlcoholFilters.CATEGORIES[1], "images/beer_mug.svg", () {
-                context.go(SearchScreen.route, extra: AlcoholFilters.fromCategory(AlcoholFilters.CATEGORIES[1]));
+                context.go('${SearchScreen.route}?category=${AlcoholFilters.CATEGORIES[1]}');
               }),
               CategoryCard(AlcoholFilters.CATEGORIES[2], "images/spirit_glass.svg", () {
-                context.go(SearchScreen.route, extra: AlcoholFilters.fromCategory(AlcoholFilters.CATEGORIES[2]));
+                context.go('${SearchScreen.route}?category=${AlcoholFilters.CATEGORIES[2]}');
               }),
               CategoryCard(AlcoholFilters.CATEGORIES[3], "images/cooler_can.svg", () {
-                context.go(SearchScreen.route, extra: AlcoholFilters.fromCategory(AlcoholFilters.CATEGORIES[3]));
+                context.go('${SearchScreen.route}?category=${AlcoholFilters.CATEGORIES[3]}');
               })
             ].map((widget) => Padding(
               padding: const EdgeInsets.symmetric(horizontal: 5),
