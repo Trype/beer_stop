@@ -4,9 +4,12 @@ import 'package:beer_stop/screens/alcohol_description_screen.dart';
 import 'package:beer_stop/screens/search_screen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_extensions/flutter_extensions.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 
 import '../data/Alcohol.dart';
+import '../navigation/navigation_root.dart';
 import '../widgets/search_bar_custom.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -14,6 +17,8 @@ class HomeScreen extends StatefulWidget {
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
+
+  static String route = '/home';
 }
 
 class _HomeScreenState extends State<HomeScreen> {
@@ -160,10 +165,12 @@ class _HomeScreenState extends State<HomeScreen> {
               builder: (context, snapshot) {
                 if(snapshot.hasData){
                   return MostEfficientAlcoholCard(snapshot.data!.title, "Cheapest way to get absolutely plastered",
-                      snapshot.data!.thumbnailUrl, "images/bottle.svg", () => Navigator.push(context, MaterialPageRoute(builder: (context) {
-                          return AlcoholDescriptionScreen(alcohol: snapshot.data!, maxHeight: MediaQuery.of(context).size.height, maxWidth: MediaQuery.of(context).size.width,);
-                        }))
+                      snapshot.data!.thumbnailUrl, "images/bottle.svg", () => context.go(AlcoholDescriptionScreen
+                          .createRoute(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height), extra: snapshot.data)
                       );
+                  // Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  //   return AlcoholDescriptionScreen(alcohol: snapshot.data!, maxHeight: MediaQuery.of(context).size.height, maxWidth: MediaQuery.of(context).size.width,);
+                  // }))
                 } else if(snapshot.hasError){
                   return MostEfficientAlcoholCard("Could not load data", "Tap to reload",
                         null, "images/bottle.svg", () => setState(() {
@@ -177,9 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 50,),
       GestureDetector(
         onTap: () => {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return SearchScreen(filters: AlcoholFilters());
-        }))
+          (NavigationRoot.of(context)!.nShell as StatefulNavigationShell).goBranch(1, initialLocation: true)
         },
         child: Hero(
           tag: 'heroSearchBar',
@@ -201,24 +206,16 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               CategoryCard(AlcoholFilters.CATEGORIES[0], "images/wine_glass.svg", () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return SearchScreen(filters: AlcoholFilters.fromCategory(AlcoholFilters.CATEGORIES[0]));
-                }));
+                context.go(SearchScreen.route, extra: AlcoholFilters.fromCategory(AlcoholFilters.CATEGORIES[0]));
               }),
               CategoryCard(AlcoholFilters.CATEGORIES[1], "images/beer_mug.svg", () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return SearchScreen(filters: AlcoholFilters.fromCategory(AlcoholFilters.CATEGORIES[1]));
-                }));
+                context.go(SearchScreen.route, extra: AlcoholFilters.fromCategory(AlcoholFilters.CATEGORIES[1]));
               }),
               CategoryCard(AlcoholFilters.CATEGORIES[2], "images/spirit_glass.svg", () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return SearchScreen(filters: AlcoholFilters.fromCategory(AlcoholFilters.CATEGORIES[2]));
-                }));
+                context.go(SearchScreen.route, extra: AlcoholFilters.fromCategory(AlcoholFilters.CATEGORIES[2]));
               }),
               CategoryCard(AlcoholFilters.CATEGORIES[3], "images/cooler_can.svg", () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return SearchScreen(filters: AlcoholFilters.fromCategory(AlcoholFilters.CATEGORIES[3]));
-                }));
+                context.go(SearchScreen.route, extra: AlcoholFilters.fromCategory(AlcoholFilters.CATEGORIES[3]));
               })
             ].map((widget) => Padding(
               padding: const EdgeInsets.symmetric(horizontal: 5),

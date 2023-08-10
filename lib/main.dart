@@ -1,3 +1,4 @@
+import 'package:beer_stop/navigation/navigation_data.dart';
 import 'package:beer_stop/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -11,12 +12,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Flutter Demo',
       theme: ThemeData(
         appBarTheme: const AppBarTheme(foregroundColor: Colors.black)
       ),
-      home: const HomeScreen(),
+      routerConfig: goRouter,
     );
   }
 }

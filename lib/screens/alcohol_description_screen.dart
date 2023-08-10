@@ -17,6 +17,11 @@ class AlcoholDescriptionScreen extends StatefulWidget {
   @override
   _AlcoholDescriptionScreenState createState() =>
       _AlcoholDescriptionScreenState();
+
+  static String route = 'details/:maxWidth/:maxHeight';
+
+  static String createRoute(double maxWidth, double maxHeight) => 'details/$maxWidth/$maxHeight';
+
 }
 
 class _AlcoholDescriptionScreenState extends State<AlcoholDescriptionScreen> with TickerProviderStateMixin{
