@@ -28,7 +28,7 @@ class NavigationRoot extends StatelessWidget {
         destinations: const [
           NavigationDestination(label: 'Home', icon: Icon(Icons.home)),
           NavigationDestination(label: 'Search', icon: Icon(Icons.search)),
-          NavigationDestination(label: 'Search', icon: Icon(Icons.favorite)),
+          NavigationDestination(label: 'Liked', icon: Icon(Icons.favorite_border)),
         ],
         onDestinationSelected: _goBranch,
       ),
