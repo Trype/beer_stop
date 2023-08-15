@@ -16,11 +16,10 @@ class LikedScreen extends StatefulWidget {
 }
 
 class _LikedScreenState extends State<LikedScreen> {
-
   List<Alcohol> alcoholList = List.empty();
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
   }
 
@@ -28,7 +27,7 @@ class _LikedScreenState extends State<LikedScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Consumer<GlobalSettings>(
-        builder: (context, settings, child){
+        builder: (context, settings, child) {
           final alcoholList = settings.getLikedAlcoholList();
           return ListView.builder(
               itemCount: alcoholList.length,
@@ -36,12 +35,19 @@ class _LikedScreenState extends State<LikedScreen> {
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: AlcoholDescriptionCard(
-                      parentRoute: '/liked',
-                      alcohol: alcoholList[index]),
+                      parentRoute: '/liked', alcohol: alcoholList[index]),
                 );
               });
         },
       ),
+
+      // Consumer<GlobalSettings>(
+      //   builder: (context, settings, child){
+      //     final alcoholList = settings.getLikedAlcoholList();
+      //
+      //   },
+      // ),
     );
   }
 }
+//

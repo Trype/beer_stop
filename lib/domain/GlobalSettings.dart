@@ -6,6 +6,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class GlobalSettings extends ChangeNotifier{
 
+  String get username{
+    if(prefs == null) return '';
+    return prefs!.containsKey('username') ? prefs!.getString('username')! : '';
+  }
+
+  set username(String username){
+    if(prefs == null) return;
+    prefs!.setString('username', username);
+    notifyListeners();
+  }
+
   void _initializePrefs() async{
     prefs = await SharedPreferences.getInstance();
     notifyListeners();
@@ -53,7 +64,7 @@ class GlobalSettings extends ChangeNotifier{
     Set<String> keys = prefs!.getKeys();
     List<Alcohol> alcoholList = List.empty(growable: true);
     for(String key in keys){
-      if(key == 'name') continue;
+      if(key == 'username') continue;
       alcoholList.add(Alcohol.fromJson(jsonDecode(prefs!.getString(key)!)));
     }
     return alcoholList;

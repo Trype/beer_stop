@@ -161,97 +161,97 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(),
-        body: GestureDetector(
-          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                color: Colors.white,
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      InkWell(
-                        child: const Icon(Icons.menu),
-                        onTap: () {
-                          //action code when clicked
-                          setState(() {
-                            menuToggle = !menuToggle;
-                          });
-                        },
-                      ),
-                      if (menuToggle)
-                        Center(
-                          child: Form(
-                            key: _formKey,
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  const Text("Categories"),
-                                  ToggleButtons(
-                                    direction: Axis.horizontal,
-                                    onPressed: (int index) {
-                                      // All buttons are selectable.
-                                      setState(() {
-                                        _filters.categorySelection[index] =
-                                        !_filters.categorySelection[index];
-                                      });
-                                    },
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(8)),
-                                    selectedBorderColor: Colors.green[700],
-                                    selectedColor: Colors.white,
-                                    fillColor: Colors.green[200],
-                                    color: Colors.green[400],
-                                    constraints: const BoxConstraints(
-                                      minHeight: 30.0,
-                                      minWidth: 60.0,
-                                    ),
-                                    isSelected: _filters.categorySelection,
-                                    children: AlcoholFilters.CATEGORIES
-                                        .map((e) => Padding(
-                                      padding: const EdgeInsets.all(8),
-                                      child: Text(e),
-                                    ))
-                                        .toList(),
-                                  ),
-                                  _createFilterFormField(_minPriceIndexController, _maxPriceIndexController, _filters.priceIndices),
-                                  _createFilterFormField(_minPriceController, _maxPriceController, _filters.prices),
-                                  _createFilterFormField(_minVolumeController, _maxVolumeController, _filters.volumes),
-                                  _createFilterRangeSlider(_filters.alcoholContents),
-                                  const SizedBox(height: 10,),
-                                  TextButton(
-                                    style: ButtonStyle(
-                                      foregroundColor:
-                                      MaterialStateProperty.all<Color>(
-                                          Colors.blue),
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        if(_formKey.currentState!.validate()){
-                                          FocusScope.of(context).requestFocus(FocusNode());
-                                          _searchNoFilters = false;
-                                          _listFetcher =
-                                              repository.updateAlcoholList(
-                                                  filters: _filters,
-                                                  filtersChanged: true, searchQuery: _searchQuery);
-                                        }
-                                        _scrollController.jumpTo(_scrollController.position.minScrollExtent);
-                                      });
-                                    },
-                                    child: const Text('Apply Filters'),
-                                  )
-                                ]),
-                          ),
+        body: SafeArea(
+          child: GestureDetector(
+            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  color: Colors.white,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const SizedBox(
+                          height: 20,
                         ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      SearchBarCustom(callback: (String searchQuery) {
+                        InkWell(
+                          child: const Icon(Icons.menu),
+                          onTap: () {
+                            //action code when clicked
+                            setState(() {
+                              menuToggle = !menuToggle;
+                            });
+                          },
+                        ),
+                        if (menuToggle)
+                          Center(
+                            child: Form(
+                              key: _formKey,
+                              child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const Text("Categories"),
+                                    ToggleButtons(
+                                      direction: Axis.horizontal,
+                                      onPressed: (int index) {
+                                        // All buttons are selectable.
+                                        setState(() {
+                                          _filters.categorySelection[index] =
+                                          !_filters.categorySelection[index];
+                                        });
+                                      },
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(8)),
+                                      selectedBorderColor: Colors.green[700],
+                                      selectedColor: Colors.white,
+                                      fillColor: Colors.green[200],
+                                      color: Colors.green[400],
+                                      constraints: const BoxConstraints(
+                                        minHeight: 30.0,
+                                        minWidth: 60.0,
+                                      ),
+                                      isSelected: _filters.categorySelection,
+                                      children: AlcoholFilters.CATEGORIES
+                                          .map((e) => Padding(
+                                        padding: const EdgeInsets.all(8),
+                                        child: Text(e),
+                                      ))
+                                          .toList(),
+                                    ),
+                                    _createFilterFormField(_minPriceIndexController, _maxPriceIndexController, _filters.priceIndices),
+                                    _createFilterFormField(_minPriceController, _maxPriceController, _filters.prices),
+                                    _createFilterFormField(_minVolumeController, _maxVolumeController, _filters.volumes),
+                                    _createFilterRangeSlider(_filters.alcoholContents),
+                                    const SizedBox(height: 10,),
+                                    TextButton(
+                                      style: ButtonStyle(
+                                        foregroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            Colors.blue),
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          if(_formKey.currentState!.validate()){
+                                            FocusScope.of(context).requestFocus(FocusNode());
+                                            _searchNoFilters = false;
+                                            _listFetcher =
+                                                repository.updateAlcoholList(
+                                                    filters: _filters,
+                                                    filtersChanged: true, searchQuery: _searchQuery);
+                                          }
+                                          _scrollController.jumpTo(_scrollController.position.minScrollExtent);
+                                        });
+                                      },
+                                      child: const Text('Apply Filters'),
+                                    )
+                                  ]),
+                            ),
+                          ),
+                        const SizedBox(
+                          height: 20,
+                        ),
+                        SearchBarCustom(callback: (String searchQuery) {
                           setState(() {
                             _searchQuery = searchQuery;
                             _searchNoFilters = true;
@@ -259,58 +259,59 @@ class _SearchScreenState extends State<SearchScreen> {
                             _scrollController.jumpTo(_scrollController.position.minScrollExtent);
                           });
                         },),
-                      const SizedBox(
-                        height: 20,
-                      )
-                    ]
-                        .map((widget) => Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 34.5),
-                              child: widget,
-                            ))
-                        .toList()),
-              ),
-              Expanded(
-                  child: FutureBuilder<List<Alcohol>>(
-                future: _listFetcher,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    _tempDisplayList = snapshot.data!;
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 34.5),
-                      child: ListView.builder(
-                          itemCount: _tempDisplayList.length,
-                          controller: _scrollController,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: AlcoholDescriptionCard(
-                                parentRoute: '/search',
-                                  alcohol: _tempDisplayList[index]),
-                            );
-                          }),
-                    );
-                  }
-                  // else if(snapshot.hasError){
-                  //   //todo
-                  // }
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 34.5),
-                    child: ListView.builder(
-                        // clipBehavior: Clip.antiAlias,
-                        itemCount: _tempDisplayList.length,
-                        itemBuilder: (BuildContext context, int index) {
+                        const SizedBox(
+                          height: 20,
+                        )
+                      ]
+                          .map((widget) => Padding(
+                        padding:
+                        const EdgeInsets.symmetric(horizontal: 34.5),
+                        child: widget,
+                      ))
+                          .toList()),
+                ),
+                Expanded(
+                    child: FutureBuilder<List<Alcohol>>(
+                      future: _listFetcher,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          _tempDisplayList = snapshot.data!;
                           return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: AlcoholDescriptionCard(
-                              parentRoute: '/search',
-                                alcohol: _tempDisplayList[index]),
+                            padding: const EdgeInsets.symmetric(horizontal: 34.5),
+                            child: ListView.builder(
+                                itemCount: _tempDisplayList.length,
+                                controller: _scrollController,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 10),
+                                    child: AlcoholDescriptionCard(
+                                        parentRoute: '/search',
+                                        alcohol: _tempDisplayList[index]),
+                                  );
+                                }),
                           );
-                        }),
-                  );
-                },
-              )),
-            ],
+                        }
+                        // else if(snapshot.hasError){
+                        //   //todo
+                        // }
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 34.5),
+                          child: ListView.builder(
+                            // clipBehavior: Clip.antiAlias,
+                              itemCount: _tempDisplayList.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 10),
+                                  child: AlcoholDescriptionCard(
+                                      parentRoute: '/search',
+                                      alcohol: _tempDisplayList[index]),
+                                );
+                              }),
+                        );
+                      },
+                    )),
+              ],
+            ),
           ),
         ));
   }
