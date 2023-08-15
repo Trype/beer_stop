@@ -4,7 +4,7 @@ import 'package:beer_stop/data/Alcohol.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class GlobalSettings with ChangeNotifier{
+class GlobalSettings extends ChangeNotifier{
 
   void _initializePrefs() async{
     prefs = await SharedPreferences.getInstance();
@@ -37,6 +37,15 @@ class GlobalSettings with ChangeNotifier{
     if(prefs == null) return;
     prefs!.remove(alcohol.permanentId.toString());
     notifyListeners();
+  }
+
+  void toggleLikedAlcohol(Alcohol alcohol){
+    if(isAlcoholLiked(alcohol)){
+      removeLikedAlcohol(alcohol);
+    }
+    else{
+      saveLikedAlcohol(alcohol);
+    }
   }
 
   List<Alcohol> getLikedAlcoholList(){

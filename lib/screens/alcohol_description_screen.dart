@@ -5,6 +5,7 @@ import 'package:beer_stop/domain/GlobalSettings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_extensions/flutter_extensions.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -26,10 +27,6 @@ class AlcoholDescriptionScreen extends StatefulWidget {
 }
 
 class _AlcoholDescriptionScreenState extends State<AlcoholDescriptionScreen> with TickerProviderStateMixin{
-
-  bool _liked = false;
-  GlobalSettings settings = GlobalSettings();
-
 
   final DecorationTween decorationTween = DecorationTween(
     begin: BoxDecoration(
@@ -76,7 +73,6 @@ class _AlcoholDescriptionScreenState extends State<AlcoholDescriptionScreen> wit
     });});
     _offsetAnimation = offsetTween.animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
     _sizeAnimation = sizeTween.animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-    _liked = settings.isAlcoholLiked(widget.alcohol);
   }
 
   Widget SmallDescription(String title, String text){
@@ -179,20 +175,15 @@ class _AlcoholDescriptionScreenState extends State<AlcoholDescriptionScreen> wit
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Expanded(child: SmallDescription("Price", "\$${widget.alcohol.price}"),),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                            _liked = !_liked;
-                          });
-                            if(_liked) {
-                              settings.saveLikedAlcohol(widget.alcohol);
-                            } else {
-                              settings.removeLikedAlcohol(widget.alcohol);
-                            }
+                        Consumer<GlobalSettings>(builder: (context, settings, child){
+                          return GestureDetector(
+                            onTap: () {
+                              settings.toggleLikedAlcohol(widget.alcohol);
                             },
-                          child: Icon(_liked ?  Icons.favorite : Icons.favorite_border, size: 30,
-                          color: _liked ? Colors.red : Colors.black,),
-                        ),
+                            child: Icon(settings.isAlcoholLiked(widget.alcohol) ?  Icons.favorite : Icons.favorite_border, size: 30,
+                              color: settings.isAlcoholLiked(widget.alcohol) ? Colors.red : Colors.black,),
+                          );
+                        }),
                         Expanded(child: SmallDescription("Volume", "${widget.alcohol.volume}mL"),)
                       ],
                     ),
