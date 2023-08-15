@@ -5,13 +5,12 @@ import 'package:beer_stop/widgets/alcohol_description_card.dart';
 import 'package:beer_stop/widgets/filter_input_text_form_field.dart';
 import 'package:beer_stop/widgets/search_bar_custom.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../data/Alcohol.dart';
 
 class SearchScreen extends StatefulWidget {
-  const SearchScreen({Key? key, required this.filters}) : super(key: key);
-
-  final AlcoholFilters filters;
+  const SearchScreen({Key? key}) : super(key: key);
 
   @override
   _SearchScreenState createState() => _SearchScreenState();
@@ -20,6 +19,7 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  final AlcoholFilters _filters = AlcoholFilters();
   AlcoholRepository repository = AlcoholRepository();
   late Future<List<Alcohol>> _listFetcher;
   List<Alcohol> _tempDisplayList = List.empty();
@@ -109,20 +109,20 @@ class _SearchScreenState extends State<SearchScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _createFilterFormFieldHeader(widget.filters.alcoholContents),
+        _createFilterFormFieldHeader(_filters.alcoholContents),
         RangeSlider(
-          values: RangeValues(widget.filters.alcoholContents.minVal!,
-              widget.filters.alcoholContents.maxVal!),
+          values: RangeValues(_filters.alcoholContents.minVal!,
+              _filters.alcoholContents.maxVal!),
           max: 100,
           divisions: 50,
           labels: RangeLabels(
-            widget.filters.alcoholContents.minVal!.round().toString(),
-            widget.filters.alcoholContents.maxVal!.round().toString(),
+            _filters.alcoholContents.minVal!.round().toString(),
+            _filters.alcoholContents.maxVal!.round().toString(),
           ),
-          onChanged: widget.filters.alcoholContents.enabled ? (RangeValues values) {
+          onChanged: _filters.alcoholContents.enabled ? (RangeValues values) {
             setState(() {
-              widget.filters.alcoholContents.minVal = values.start;
-              widget.filters.alcoholContents.maxVal = values.end;
+              _filters.alcoholContents.minVal = values.start;
+              _filters.alcoholContents.maxVal = values.end;
             });
           } : null,
         )
@@ -135,18 +135,27 @@ class _SearchScreenState extends State<SearchScreen> {
   void initState() {
     super.initState();
     _listFetcher = repository.updateAlcoholList(
-        filters: widget.filters, filtersChanged: true);
+        filters: _filters, filtersChanged: true);
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent ==
           _scrollController.position.pixels) {
         setState(() {
           _listFetcher = repository.updateAlcoholList(
-              filters: _searchNoFilters ? null : widget.filters,
+              filters: _searchNoFilters ? null : _filters,
               searchQuery: _searchQuery
           );
         });
       }
     });
+  }
+
+  @override
+  void didChangeDependencies(){
+    super.didChangeDependencies();
+    final Map<String, String> queryParameters = GoRouterState.of(context).uri.queryParameters;
+    if(queryParameters.containsKey('category')) {
+      _filters.categorySelection = List.generate(4, (index) => AlcoholFilters.CATEGORIES[index] == queryParameters['category']);
+    }
   }
 
   @override
@@ -188,9 +197,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                     onPressed: (int index) {
                                       // All buttons are selectable.
                                       setState(() {
-                                        widget.filters.categorySelection[index] =
-                                        !widget
-                                            .filters.categorySelection[index];
+                                        _filters.categorySelection[index] =
+                                        !_filters.categorySelection[index];
                                       });
                                     },
                                     borderRadius: const BorderRadius.all(
@@ -203,7 +211,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                       minHeight: 30.0,
                                       minWidth: 60.0,
                                     ),
-                                    isSelected: widget.filters.categorySelection,
+                                    isSelected: _filters.categorySelection,
                                     children: AlcoholFilters.CATEGORIES
                                         .map((e) => Padding(
                                       padding: const EdgeInsets.all(8),
@@ -211,10 +219,10 @@ class _SearchScreenState extends State<SearchScreen> {
                                     ))
                                         .toList(),
                                   ),
-                                  _createFilterFormField(_minPriceIndexController, _maxPriceIndexController, widget.filters.priceIndices),
-                                  _createFilterFormField(_minPriceController, _maxPriceController, widget.filters.prices),
-                                  _createFilterFormField(_minVolumeController, _maxVolumeController, widget.filters.volumes),
-                                  _createFilterRangeSlider(widget.filters.alcoholContents),
+                                  _createFilterFormField(_minPriceIndexController, _maxPriceIndexController, _filters.priceIndices),
+                                  _createFilterFormField(_minPriceController, _maxPriceController, _filters.prices),
+                                  _createFilterFormField(_minVolumeController, _maxVolumeController, _filters.volumes),
+                                  _createFilterRangeSlider(_filters.alcoholContents),
                                   const SizedBox(height: 10,),
                                   TextButton(
                                     style: ButtonStyle(
@@ -229,7 +237,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                           _searchNoFilters = false;
                                           _listFetcher =
                                               repository.updateAlcoholList(
-                                                  filters: widget.filters,
+                                                  filters: _filters,
                                                   filtersChanged: true, searchQuery: _searchQuery);
                                         }
                                         _scrollController.jumpTo(_scrollController.position.minScrollExtent);
@@ -243,9 +251,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       const SizedBox(
                         height: 20,
                       ),
-                      Hero(
-                        tag: 'heroSearchBar',
-                        child: SearchBarCustom(callback: (String searchQuery) {
+                      SearchBarCustom(callback: (String searchQuery) {
                           setState(() {
                             _searchQuery = searchQuery;
                             _searchNoFilters = true;
@@ -253,7 +259,6 @@ class _SearchScreenState extends State<SearchScreen> {
                             _scrollController.jumpTo(_scrollController.position.minScrollExtent);
                           });
                         },),
-                      ),
                       const SizedBox(
                         height: 20,
                       )
@@ -280,6 +285,7 @@ class _SearchScreenState extends State<SearchScreen> {
                             return Padding(
                               padding: const EdgeInsets.symmetric(vertical: 10),
                               child: AlcoholDescriptionCard(
+                                parentRoute: '/search',
                                   alcohol: _tempDisplayList[index]),
                             );
                           }),
@@ -297,6 +303,7 @@ class _SearchScreenState extends State<SearchScreen> {
                           return Padding(
                             padding: const EdgeInsets.symmetric(vertical: 10),
                             child: AlcoholDescriptionCard(
+                              parentRoute: '/search',
                                 alcohol: _tempDisplayList[index]),
                           );
                         }),

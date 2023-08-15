@@ -1,9 +1,11 @@
 import 'dart:convert';
 
 import 'package:beer_stop/data/Alcohol.dart';
+import 'package:beer_stop/domain/GlobalSettings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_extensions/flutter_extensions.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transparent_image/transparent_image.dart';
 
@@ -20,14 +22,11 @@ class AlcoholDescriptionScreen extends StatefulWidget {
 
   static String route = 'details/:maxWidth/:maxHeight';
 
-  static String createRoute(double maxWidth, double maxHeight) => 'details/$maxWidth/$maxHeight';
+  static String createRoute(double maxWidth, double maxHeight) => '/details/${maxWidth.toString()}/${maxWidth.toString()}';
 
 }
 
 class _AlcoholDescriptionScreenState extends State<AlcoholDescriptionScreen> with TickerProviderStateMixin{
-
-  bool _liked = false;
-  SharedPreferences? prefs;
 
   final DecorationTween decorationTween = DecorationTween(
     begin: BoxDecoration(
@@ -62,14 +61,6 @@ class _AlcoholDescriptionScreenState extends State<AlcoholDescriptionScreen> wit
 
   late AnimationController _controller;
 
-  void _initializePrefs() async{
-    prefs = await SharedPreferences.getInstance();
-    if(prefs!.containsKey(widget.alcohol.permanentId.toString())){
-      setState(() {
-        _liked = true;
-      });
-    }
-  }
 
   @override
   void initState(){
@@ -82,7 +73,6 @@ class _AlcoholDescriptionScreenState extends State<AlcoholDescriptionScreen> wit
     });});
     _offsetAnimation = offsetTween.animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
     _sizeAnimation = sizeTween.animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
-    _initializePrefs();
   }
 
   Widget SmallDescription(String title, String text){
@@ -185,26 +175,15 @@ class _AlcoholDescriptionScreenState extends State<AlcoholDescriptionScreen> wit
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Expanded(child: SmallDescription("Price", "\$${widget.alcohol.price}"),),
-                        GestureDetector(
-                          onTap: () {
-                            setState(() {
-                            _liked = !_liked;
-                          });
-                            if(prefs == null) return;
-                            if(_liked) {
-                              final alcoholEncode = jsonEncode(
-                                  widget.alcohol.toJson());
-                              prefs!.setString(
-                                  widget.alcohol.permanentId.toString(),
-                                  alcoholEncode);
-                            }
-                            else{
-                              prefs!.remove(widget.alcohol.permanentId.toString());
-                            }
+                        Consumer<GlobalSettings>(builder: (context, settings, child){
+                          return GestureDetector(
+                            onTap: () {
+                              settings.toggleLikedAlcohol(widget.alcohol);
                             },
-                          child: Icon(_liked ?  Icons.favorite : Icons.favorite_border, size: 30,
-                          color: _liked ? Colors.red : Colors.black,),
-                        ),
+                            child: Icon(settings.isAlcoholLiked(widget.alcohol) ?  Icons.favorite : Icons.favorite_border, size: 30,
+                              color: settings.isAlcoholLiked(widget.alcohol) ? Colors.red : Colors.black,),
+                          );
+                        }),
                         Expanded(child: SmallDescription("Volume", "${widget.alcohol.volume}mL"),)
                       ],
                     ),

@@ -1,6 +1,7 @@
 import 'package:beer_stop/navigation/navigation_data.dart';
 import 'package:beer_stop/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const MyApp());

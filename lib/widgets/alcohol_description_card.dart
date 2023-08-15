@@ -7,9 +7,11 @@ import '../data/Alcohol.dart';
 import '../screens/alcohol_description_screen.dart';
 
 class AlcoholDescriptionCard extends StatelessWidget {
-  const AlcoholDescriptionCard({Key? key, required this.alcohol}) : super(key: key);
+  const AlcoholDescriptionCard({Key? key, required this.alcohol, required this.parentRoute}) : super(key: key);
 
   final Alcohol alcohol;
+
+  final String parentRoute;
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +26,8 @@ class AlcoholDescriptionCard extends StatelessWidget {
           ),
           child: InkWell(
             onTap: () => {
-              context.go(AlcoholDescriptionScreen
-                  .createRoute(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height), extra: alcohol)
+              context.go('$parentRoute${AlcoholDescriptionScreen
+                  .createRoute(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height)}', extra: alcohol)
             },
             child: Row(
               children: [
