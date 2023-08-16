@@ -241,76 +241,92 @@ class _SearchScreenState extends State<SearchScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(
-              height: 20,
-            ),
-            Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 34.5),
-                child: InkWell(
-                  child: const Icon(Icons.menu),
-                  onTap: () {
-                    //action code when clicked
-                    setState(() {
-                      menuToggle = !menuToggle;
-                    });
-                  },
-                )),
-            const SizedBox(
-              height: 20,
+            Container(
+              color: Colors.white,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 34.5),
+                      child: InkWell(
+                        child: const Icon(Icons.menu),
+                        onTap: () {
+                          //action code when clicked
+                          setState(() {
+                            menuToggle = !menuToggle;
+                          });
+                        },
+                      )),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                ],
+              ),
             ),
             if (menuToggle)
               Expanded(
                   child: SingleChildScrollView(
-                      child: Container(child: _menuColumn()))),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 34.5),
-              child: SearchBarCustom(
-                callback: (String searchQuery) {
-                  setState(() {
-                    _searchQuery = searchQuery;
-                    _searchNoFilters = true;
-                    _listFetcher = repository.updateAlcoholList(
-                        filtersChanged: true, searchQuery: _searchQuery);
-                    _scrollController
-                        .jumpTo(_scrollController.position.minScrollExtent);
-                    menuToggle = false;
-                  });
-                },
-                onFocus: () => setState(() {
-                  menuToggle = false;
-                }),
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            if (_searchQuery != null)
-              Padding(padding: EdgeInsets.symmetric(horizontal: 34.5),
-              child: Row(
+                      child: Container(color: Colors.white,
+                          child: _menuColumn()))),
+            Container(
+              color: Colors.white,
+              child: Column(
                 children: [
-                  Text('Searching for: $_searchQuery', style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontFamily: 'Raleway',
-                      fontWeight: FontWeight.w700
-                  ),),
-                  SizedBox(width: 10,),
-                  InkWell(
-                    child: const Icon(Icons.cancel_outlined),
-                    onTap: () {
-                      //action code when clicked
-                      setState(() {
-                        _searchQuery = null;
-                        _listFetcher = repository.updateAlcoholList(
-                            filters: _filters,
-                            filtersChanged: true);
-                      });
-                    },
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 34.5),
+                    child: SearchBarCustom(
+                      callback: (String searchQuery) {
+                        setState(() {
+                          _searchQuery = searchQuery;
+                          _searchNoFilters = true;
+                          _listFetcher = repository.updateAlcoholList(
+                              filtersChanged: true, searchQuery: _searchQuery);
+                          _scrollController
+                              .jumpTo(_scrollController.position.minScrollExtent);
+                          menuToggle = false;
+                        });
+                      },
+                      onFocus: () => setState(() {
+                        menuToggle = false;
+                      }),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  if (_searchQuery != null)
+                    Padding(padding: EdgeInsets.symmetric(horizontal: 34.5),
+                      child: Row(
+                        children: [
+                          Text('Searching for: $_searchQuery', style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontFamily: 'Raleway',
+                              fontWeight: FontWeight.w700
+                          ),),
+                          SizedBox(width: 10,),
+                          InkWell(
+                            child: const Icon(Icons.cancel_outlined),
+                            onTap: () {
+                              //action code when clicked
+                              setState(() {
+                                _searchQuery = null;
+                                _listFetcher = repository.updateAlcoholList(
+                                    filters: _filters,
+                                    filtersChanged: true);
+                              });
+                            },
+                          ),
+                        ],
+                      ),),
+                  const SizedBox(
+                    height: 20,
                   ),
                 ],
-              ),),
-            const SizedBox(
-              height: 20,
+              ),
             ),
             // if(!menuToggle)
             Expanded(
