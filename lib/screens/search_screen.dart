@@ -158,6 +158,71 @@ class _SearchScreenState extends State<SearchScreen> {
     }
   }
 
+  Widget _menuColumn(){
+    return Form(
+      key: _formKey,
+      child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const Text("Categories"),
+            ToggleButtons(
+              direction: Axis.horizontal,
+              onPressed: (int index) {
+                // All buttons are selectable.
+                setState(() {
+                  _filters.categorySelection[index] =
+                  !_filters.categorySelection[index];
+                });
+              },
+              borderRadius: const BorderRadius.all(
+                  Radius.circular(8)),
+              selectedBorderColor: Colors.green[700],
+              selectedColor: Colors.white,
+              fillColor: Colors.green[200],
+              color: Colors.green[400],
+              constraints: const BoxConstraints(
+                minHeight: 30.0,
+                minWidth: 60.0,
+              ),
+              isSelected: _filters.categorySelection,
+              children: AlcoholFilters.CATEGORIES
+                  .map((e) => Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(e),
+              ))
+                  .toList(),
+            ),
+            _createFilterFormField(_minPriceIndexController, _maxPriceIndexController, _filters.priceIndices),
+            _createFilterFormField(_minPriceController, _maxPriceController, _filters.prices),
+            _createFilterFormField(_minVolumeController, _maxVolumeController, _filters.volumes),
+            _createFilterRangeSlider(_filters.alcoholContents),
+            const SizedBox(height: 10,),
+            TextButton(
+              style: ButtonStyle(
+                foregroundColor:
+                MaterialStateProperty.all<Color>(
+                    Colors.blue),
+              ),
+              onPressed: () {
+                setState(() {
+                  if(_formKey.currentState!.validate()){
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    // menuToggle = false;
+                    _searchNoFilters = false;
+                    _listFetcher =
+                        repository.updateAlcoholList(
+                            filters: _filters,
+                            filtersChanged: true, searchQuery: _searchQuery);
+                  }
+                  _scrollController.jumpTo(_scrollController.position.minScrollExtent);
+                });
+              },
+              child: const Text('Apply Filters'),
+            )
+          ]),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -167,109 +232,47 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  color: Colors.white,
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        InkWell(
-                          child: const Icon(Icons.menu),
-                          onTap: () {
-                            //action code when clicked
-                            setState(() {
-                              menuToggle = !menuToggle;
-                            });
-                          },
-                        ),
-                        if (menuToggle)
-                          Center(
-                            child: Form(
-                              key: _formKey,
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    const Text("Categories"),
-                                    ToggleButtons(
-                                      direction: Axis.horizontal,
-                                      onPressed: (int index) {
-                                        // All buttons are selectable.
-                                        setState(() {
-                                          _filters.categorySelection[index] =
-                                          !_filters.categorySelection[index];
-                                        });
-                                      },
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(8)),
-                                      selectedBorderColor: Colors.green[700],
-                                      selectedColor: Colors.white,
-                                      fillColor: Colors.green[200],
-                                      color: Colors.green[400],
-                                      constraints: const BoxConstraints(
-                                        minHeight: 30.0,
-                                        minWidth: 60.0,
-                                      ),
-                                      isSelected: _filters.categorySelection,
-                                      children: AlcoholFilters.CATEGORIES
-                                          .map((e) => Padding(
-                                        padding: const EdgeInsets.all(8),
-                                        child: Text(e),
-                                      ))
-                                          .toList(),
-                                    ),
-                                    _createFilterFormField(_minPriceIndexController, _maxPriceIndexController, _filters.priceIndices),
-                                    _createFilterFormField(_minPriceController, _maxPriceController, _filters.prices),
-                                    _createFilterFormField(_minVolumeController, _maxVolumeController, _filters.volumes),
-                                    _createFilterRangeSlider(_filters.alcoholContents),
-                                    const SizedBox(height: 10,),
-                                    TextButton(
-                                      style: ButtonStyle(
-                                        foregroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            Colors.blue),
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          if(_formKey.currentState!.validate()){
-                                            FocusScope.of(context).requestFocus(FocusNode());
-                                            _searchNoFilters = false;
-                                            _listFetcher =
-                                                repository.updateAlcoholList(
-                                                    filters: _filters,
-                                                    filtersChanged: true, searchQuery: _searchQuery);
-                                          }
-                                          _scrollController.jumpTo(_scrollController.position.minScrollExtent);
-                                        });
-                                      },
-                                      child: const Text('Apply Filters'),
-                                    )
-                                  ]),
-                            ),
-                          ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        SearchBarCustom(callback: (String searchQuery) {
-                          setState(() {
-                            _searchQuery = searchQuery;
-                            _searchNoFilters = true;
-                            _listFetcher = repository.updateAlcoholList(filtersChanged: true, searchQuery: _searchQuery);
-                            _scrollController.jumpTo(_scrollController.position.minScrollExtent);
-                          });
-                        },),
-                        const SizedBox(
-                          height: 20,
-                        )
-                      ]
-                          .map((widget) => Padding(
-                        padding:
-                        const EdgeInsets.symmetric(horizontal: 34.5),
-                        child: widget,
-                      ))
-                          .toList()),
+                const SizedBox(
+                  height: 20,
                 ),
+                Padding(
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 34.5),
+                    child:
+                InkWell(
+                  child: const Icon(Icons.menu),
+                  onTap: () {
+                    //action code when clicked
+                    setState(() {
+                      menuToggle = !menuToggle;
+                    });
+                  },
+                )),
+                const SizedBox(
+                  height: 20,
+                ),
+                if(menuToggle)
+                Expanded(child: SingleChildScrollView(
+                  child: Container(
+                    child: _menuColumn()
+                ))),
+                Padding(
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 34.5),
+                  child: SearchBarCustom(callback: (String searchQuery) {
+                    setState(() {
+                      _searchQuery = searchQuery;
+                      _searchNoFilters = true;
+                      _listFetcher = repository.updateAlcoholList(filtersChanged: true, searchQuery: _searchQuery);
+                      _scrollController.jumpTo(_scrollController.position.minScrollExtent);
+                      menuToggle = false;
+                    });
+                  },),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                if(!menuToggle)
                 Expanded(
                     child: FutureBuilder<List<Alcohol>>(
                       future: _listFetcher,
