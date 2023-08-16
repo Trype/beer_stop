@@ -213,8 +213,9 @@ class _SearchScreenState extends State<SearchScreen> {
                         repository.updateAlcoholList(
                             filters: _filters,
                             filtersChanged: true, searchQuery: _searchQuery);
+                    _scrollController.jumpTo(_scrollController.position.minScrollExtent);
+                    menuToggle = false;
                   }
-                  _scrollController.jumpTo(_scrollController.position.minScrollExtent);
                 });
               },
               child: const Text('Apply Filters'),
@@ -232,47 +233,51 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(
-                  height: 20,
-                ),
-                Padding(
-                    padding:
-                    const EdgeInsets.symmetric(horizontal: 34.5),
-                    child:
-                InkWell(
-                  child: const Icon(Icons.menu),
-                  onTap: () {
-                    //action code when clicked
-                    setState(() {
-                      menuToggle = !menuToggle;
-                    });
-                  },
-                )),
-                const SizedBox(
-                  height: 20,
-                ),
-                if(menuToggle)
-                Expanded(child: SingleChildScrollView(
-                  child: Container(
-                    child: _menuColumn()
-                ))),
-                Padding(
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 34.5),
-                  child: SearchBarCustom(callback: (String searchQuery) {
-                    setState(() {
-                      _searchQuery = searchQuery;
-                      _searchNoFilters = true;
-                      _listFetcher = repository.updateAlcoholList(filtersChanged: true, searchQuery: _searchQuery);
-                      _scrollController.jumpTo(_scrollController.position.minScrollExtent);
-                      menuToggle = false;
-                    });
-                  },),
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                if(!menuToggle)
+
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                        padding:
+                        const EdgeInsets.symmetric(horizontal: 34.5),
+                        child:
+                        InkWell(
+                          child: const Icon(Icons.menu),
+                          onTap: () {
+                            //action code when clicked
+                            setState(() {
+                              menuToggle = !menuToggle;
+                            });
+                          },
+                        )),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    if(menuToggle)
+                      Expanded(child: SingleChildScrollView(
+                          child: Container(
+                              child: _menuColumn()
+                          ))),
+                    Padding(
+                      padding:
+                      const EdgeInsets.symmetric(horizontal: 34.5),
+                      child: SearchBarCustom(callback: (String searchQuery) {
+                        setState(() {
+                          _searchQuery = searchQuery;
+                          _searchNoFilters = true;
+                          _listFetcher = repository.updateAlcoholList(filtersChanged: true, searchQuery: _searchQuery);
+                          _scrollController.jumpTo(_scrollController.position.minScrollExtent);
+                          menuToggle = false;
+                        });
+                      }, onFocus: () => setState(() {
+                        menuToggle = false;
+                      }),),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+
+                // if(!menuToggle)
                 Expanded(
                     child: FutureBuilder<List<Alcohol>>(
                       future: _listFetcher,
