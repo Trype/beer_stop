@@ -130,90 +130,92 @@ class _AlcoholDescriptionScreenState extends State<AlcoholDescriptionScreen> wit
   Widget _createDescriptionColumn(){
     return Padding(
                 padding: EdgeInsets.symmetric(horizontal: 10),
-                child: Column(mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(height: 10,),
-                    Text(widget.alcohol.title, style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 32,
-                        fontFamily: 'Playfair Display',
-                        fontWeight: FontWeight.w700
-                    ), textAlign: TextAlign.center,),
-                    const SizedBox(height: 20,),
-                    Text(
-                      widget.alcohol.brand != null ? widget.alcohol.brand! : "Generic",
-                      style: const TextStyle(
-                          color: Colors.green,
-                          fontSize: 20,
-                          fontFamily: 'Raleway',
+                child: SingleChildScrollView(
+                  child: Column(mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 10,),
+                      Text(widget.alcohol.title, style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 32,
+                          fontFamily: 'Playfair Display',
                           fontWeight: FontWeight.w700
-                      ),
-                    ),
-                    const SizedBox(height: 25,),
-                    RatingBar.builder(
-                      ignoreGestures: true,
-                      initialRating: widget.alcohol.rating,
-                      direction: Axis.horizontal,
-                      allowHalfRating: true,
-                      itemCount: 5,
-                      itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      itemBuilder: (context, _) => const Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                      ),
-                      onRatingUpdate: (rating) {
-                        print(rating);
-                      },
-                    ),
-                    const SizedBox(height: 25,),
-                    SmallDescription("Category", widget.alcohol.category),
-                    const SizedBox(height: 25,),
-                    SmallDescription("Subcategory", widget.alcohol.subcategory ?? "Generic"),
-                    const SizedBox(height: 25,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(child: SmallDescription("Price", "\$${widget.alcohol.price}"),),
-                        Consumer<GlobalSettings>(builder: (context, settings, child){
-                          return GestureDetector(
-                            onTap: () {
-                              settings.toggleLikedAlcohol(widget.alcohol);
-                            },
-                            child: Icon(settings.isAlcoholLiked(widget.alcohol) ?  Icons.favorite : Icons.favorite_border, size: 30,
-                              color: settings.isAlcoholLiked(widget.alcohol) ? Colors.red : Colors.black,),
-                          );
-                        }),
-                        Expanded(child: SmallDescription("Volume", "${widget.alcohol.volume}mL"),)
-                      ],
-                    ),
-                    const SizedBox(height: 10,),
-                    Column(
-                      children: [
-                        const Text(
-                          "Efficiency",
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 13,
-                              fontFamily: 'Playfair Display',
-                              fontWeight: FontWeight.w700
-                          ),
+                      ), textAlign: TextAlign.center,),
+                      const SizedBox(height: 20,),
+                      Text(
+                        widget.alcohol.brand != null ? widget.alcohol.brand! : "Generic",
+                        style: const TextStyle(
+                            color: Colors.green,
+                            fontSize: 20,
+                            fontFamily: 'Raleway',
+                            fontWeight: FontWeight.w700
                         ),
-                        SizedBox(height: 5,),
-                        Text(
-                          "${widget.alcohol.priceIndex.toStringAsFixed(3)}/mL",
-                          style: TextStyle(
-                              color: priceIndexColor(widget.alcohol.priceIndex),
-                              fontSize: 30,
-                              fontFamily: 'Playfair Display',
-                              fontWeight: FontWeight.w700
-                          ),
+                      ),
+                      const SizedBox(height: 25,),
+                      RatingBar.builder(
+                        ignoreGestures: true,
+                        initialRating: widget.alcohol.rating,
+                        direction: Axis.horizontal,
+                        allowHalfRating: true,
+                        itemCount: 5,
+                        itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        itemBuilder: (context, _) => const Icon(
+                          Icons.star,
+                          color: Colors.amber,
                         ),
-                      ],
-                    ),
-                    const SizedBox(height: 25,),
-                    SmallDescription("Description", widget.alcohol.description ?? "No idea. Try at your own risk")
-                  ],),
+                        onRatingUpdate: (rating) {
+                          print(rating);
+                        },
+                      ),
+                      const SizedBox(height: 25,),
+                      SmallDescription("Category", widget.alcohol.category),
+                      const SizedBox(height: 25,),
+                      SmallDescription("Subcategory", widget.alcohol.subcategory ?? "Generic"),
+                      const SizedBox(height: 25,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(child: SmallDescription("Price", "\$${widget.alcohol.price}"),),
+                          Consumer<GlobalSettings>(builder: (context, settings, child){
+                            return GestureDetector(
+                              onTap: () {
+                                settings.toggleLikedAlcohol(widget.alcohol);
+                              },
+                              child: Icon(settings.isAlcoholLiked(widget.alcohol) ?  Icons.favorite : Icons.favorite_border, size: 30,
+                                color: settings.isAlcoholLiked(widget.alcohol) ? Colors.red : Colors.black,),
+                            );
+                          }),
+                          Expanded(child: SmallDescription("Volume", "${widget.alcohol.volume}mL"),)
+                        ],
+                      ),
+                      const SizedBox(height: 10,),
+                      Column(
+                        children: [
+                          const Text(
+                            "Efficiency",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 13,
+                                fontFamily: 'Playfair Display',
+                                fontWeight: FontWeight.w700
+                            ),
+                          ),
+                          SizedBox(height: 5,),
+                          Text(
+                            "${widget.alcohol.priceIndex.toStringAsFixed(3)}/mL",
+                            style: TextStyle(
+                                color: priceIndexColor(widget.alcohol.priceIndex),
+                                fontSize: 30,
+                                fontFamily: 'Playfair Display',
+                                fontWeight: FontWeight.w700
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 25,),
+                      SmallDescription("Description", widget.alcohol.description ?? "No idea. Try at your own risk")
+                    ],),
+                ),
               );
   }
 
