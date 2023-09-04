@@ -272,37 +272,40 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               const SizedBox(height: 30,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CategoryCard(AlcoholFilters.CATEGORIES[0],
-                      "images/wine_glass.svg", () {
-                        context.go(
-                            '${SearchScreen.route}?category=${AlcoholFilters
-                                .CATEGORIES[0]}');
-                      }),
-                  CategoryCard(
-                      AlcoholFilters.CATEGORIES[1], "images/beer_mug.svg", () {
-                    context.go('${SearchScreen.route}?category=${AlcoholFilters
-                        .CATEGORIES[1]}');
-                  }),
-                  CategoryCard(AlcoholFilters.CATEGORIES[2],
-                      "images/spirit_glass.svg", () {
-                        context.go(
-                            '${SearchScreen.route}?category=${AlcoholFilters
-                                .CATEGORIES[2]}');
-                      }),
-                  CategoryCard(AlcoholFilters.CATEGORIES[3],
-                      "images/cooler_can.svg", () {
-                        context.go(
-                            '${SearchScreen.route}?category=${AlcoholFilters
-                                .CATEGORIES[3]}');
-                      })
-                ].map((widget) =>
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: widget,
-                    )).toList(),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CategoryCard(AlcoholFilters.CATEGORIES[0],
+                        "images/wine_glass.svg", () {
+                          context.go(
+                              '${SearchScreen.route}?category=${AlcoholFilters
+                                  .CATEGORIES[0]}');
+                        }),
+                    CategoryCard(
+                        AlcoholFilters.CATEGORIES[1], "images/beer_mug.svg", () {
+                      context.go('${SearchScreen.route}?category=${AlcoholFilters
+                          .CATEGORIES[1]}');
+                    }),
+                    CategoryCard(AlcoholFilters.CATEGORIES[2],
+                        "images/spirit_glass.svg", () {
+                          context.go(
+                              '${SearchScreen.route}?category=${AlcoholFilters
+                                  .CATEGORIES[2]}');
+                        }),
+                    CategoryCard(AlcoholFilters.CATEGORIES[3],
+                        "images/cooler_can.svg", () {
+                          context.go(
+                              '${SearchScreen.route}?category=${AlcoholFilters
+                                  .CATEGORIES[3]}');
+                        })
+                  ].map((widget) =>
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: widget,
+                      )).toList(),
+                ),
               )
             ].map((widget) =>
                 Padding(

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../data/Alcohol.dart';
 
 class SearchBarCustom extends StatefulWidget {
-  SearchBarCustom({Key? key, this.enabled = true, this.callback}) : super(key: key);
+  SearchBarCustom({Key? key, this.enabled = true, this.callback, this.onFocus}) : super(key: key);
 
   final bool enabled;
 
@@ -14,6 +14,7 @@ class SearchBarCustom extends StatefulWidget {
 
   final Function(String)? callback;
 
+  final Function()? onFocus;
   @override
   _SearchBarCustomState createState() => _SearchBarCustomState();
 }
@@ -66,6 +67,9 @@ class _SearchBarCustomState extends State<SearchBarCustom> {
           TextEditingController textEditingController,
           FocusNode focusNode,
           VoidCallback onFieldSubmitted) {
+        focusNode.addListener(() {
+          if(widget.onFocus != null) widget.onFocus!();
+        });
         return  Material(
           type: MaterialType.transparency,
           child: TextField(
