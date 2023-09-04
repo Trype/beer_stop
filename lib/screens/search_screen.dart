@@ -279,29 +279,32 @@ class _SearchScreenState extends State<SearchScreen> {
                 const SizedBox(
                   height: 20,
                 ),
-                Row(
-                  children: [
-                    Text('Searching for: $_searchQuery', style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontFamily: 'Raleway',
-                        fontWeight: FontWeight.w700
-                    ),),
-                    SizedBox(width: 10,),
-                    InkWell(
-                      child: const Icon(Icons.cancel_outlined),
-                      onTap: () {
-                        //action code when clicked
-                        setState(() {
-                          _searchQuery = null;
-                          _listFetcher = repository.updateAlcoholList(
-                              filters: _filters,
-                              filtersChanged: true);
-                        });
-                      },
-                    ),
-                  ],
-                ),
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      Text('Searching for: $_searchQuery', style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontFamily: 'Raleway',
+                          fontWeight: FontWeight.w700
+                      ),),
+                      const SizedBox(width: 10,),
+                      InkWell(
+                        child: const Icon(Icons.cancel_outlined),
+                        onTap: () {
+                          //action code when clicked
+                          setState(() {
+                            _searchQuery = null;
+                            _listFetcher = repository.updateAlcoholList(
+                                filters: _filters,
+                                filtersChanged: true);
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
           const SizedBox(
