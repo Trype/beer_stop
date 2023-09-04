@@ -231,113 +231,113 @@ class _SearchScreenState extends State<SearchScreen> {
       ]),
     );
   }
+  
+  Widget _searchFunctionality(){
+    return Container(
+      color: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: AppBar().preferredSize.height + 30,
+          ),
+          InkWell(
+            child: const Icon(Icons.menu),
+            onTap: () {
+              //action code when clicked
+              setState(() {
+                menuToggle = !menuToggle;
+              });
+            },
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          if (menuToggle)
+            Expanded(child: SingleChildScrollView(
+              child: _menuColumn(),
+            )),
+          SearchBarCustom(
+            callback: (String searchQuery) {
+              setState(() {
+                _searchQuery = searchQuery;
+                _searchNoFilters = true;
+                _listFetcher = repository.updateAlcoholList(
+                    filtersChanged: true, searchQuery: _searchQuery);
+                _scrollController
+                    .jumpTo(_scrollController.position.minScrollExtent);
+                menuToggle = false;
+              });
+            },
+            onFocus: () => setState(() {
+              menuToggle = false;
+            }),
+          ),
+          if (_searchQuery != null)
+            Column(
+              children: [
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: [
+                    Text('Searching for: $_searchQuery', style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontFamily: 'Raleway',
+                        fontWeight: FontWeight.w700
+                    ),),
+                    SizedBox(width: 10,),
+                    InkWell(
+                      child: const Icon(Icons.cancel_outlined),
+                      onTap: () {
+                        //action code when clicked
+                        setState(() {
+                          _searchQuery = null;
+                          _listFetcher = repository.updateAlcoholList(
+                              filters: _filters,
+                              filtersChanged: true);
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          const SizedBox(
+            height: 20,
+          )
+        ].map((widget) =>
+        widget is Expanded ? widget : Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 34.5),
+          child: widget,
+        )).toList(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
-      child: GestureDetector(
+        body:  GestureDetector(
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              color: Colors.white,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 34.5),
-                      child: InkWell(
-                        child: const Icon(Icons.menu),
-                        onTap: () {
-                          //action code when clicked
-                          setState(() {
-                            menuToggle = !menuToggle;
-                          });
-                        },
-                      )),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                ],
-              ),
-            ),
-            if (menuToggle)
-              Expanded(
-                  child: SingleChildScrollView(
-                      child: Container(color: Colors.white,
-                          child: _menuColumn()))),
-            Container(
-              color: Colors.white,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 34.5),
-                    child: SearchBarCustom(
-                      callback: (String searchQuery) {
-                        setState(() {
-                          _searchQuery = searchQuery;
-                          _searchNoFilters = true;
-                          _listFetcher = repository.updateAlcoholList(
-                              filtersChanged: true, searchQuery: _searchQuery);
-                          _scrollController
-                              .jumpTo(_scrollController.position.minScrollExtent);
-                          menuToggle = false;
-                        });
-                      },
-                      onFocus: () => setState(() {
-                        menuToggle = false;
-                      }),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  if (_searchQuery != null)
-                    Padding(padding: EdgeInsets.symmetric(horizontal: 34.5),
-                      child: Row(
-                        children: [
-                          Text('Searching for: $_searchQuery', style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontFamily: 'Raleway',
-                              fontWeight: FontWeight.w700
-                          ),),
-                          SizedBox(width: 10,),
-                          InkWell(
-                            child: const Icon(Icons.cancel_outlined),
-                            onTap: () {
-                              //action code when clicked
-                              setState(() {
-                                _searchQuery = null;
-                                _listFetcher = repository.updateAlcoholList(
-                                    filters: _filters,
-                                    filtersChanged: true);
-                              });
-                            },
-                          ),
-                        ],
-                      ),),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                ],
-              ),
-            ),
+           menuToggle ? Flexible(
+             flex: 5,
+             child: _searchFunctionality()
+           ) : _searchFunctionality(),
             // if(!menuToggle)
-            Expanded(
+            Flexible(
+              flex: 1,
                 child: FutureBuilder<List<Alcohol>>(
               future: _listFetcher,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   _tempDisplayList = snapshot.data!;
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 34.5),
-                    child: ListView.builder(
+                  return ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 34.5, vertical: 0),
                         itemCount: _tempDisplayList.length,
                         controller: _scrollController,
                         itemBuilder: (BuildContext context, int index) {
@@ -347,8 +347,7 @@ class _SearchScreenState extends State<SearchScreen> {
                                 parentRoute: '/search',
                                 alcohol: _tempDisplayList[index]),
                           );
-                        }),
-                  );
+                        });
                 }
                 // else if(snapshot.hasError){
                 //   //todo
@@ -372,7 +371,7 @@ class _SearchScreenState extends State<SearchScreen> {
           ],
         ),
       ),
-    ));
+    );
   }
 
   @override
