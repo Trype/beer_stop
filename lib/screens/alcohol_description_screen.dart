@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:beer_stop/data/Alcohol.dart';
 import 'package:beer_stop/domain/GlobalSettings.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_extensions/flutter_extensions.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:transparent_image/transparent_image.dart';
@@ -119,12 +121,22 @@ class _AlcoholDescriptionScreenState extends State<AlcoholDescriptionScreen> wit
       clipBehavior: Clip.hardEdge,
       width: (_sizeAnimation.value as Size).width,
       height: (_sizeAnimation.value as Size).height,
-            child:
-            FadeInImage(placeholder: MemoryImage(kTransparentImage), //todo handle placeholder
-                fit: BoxFit.contain,
-                image: NetworkImage(widget.alcohol.imageUrl!)),
+            child: widget.alcohol.imageUrl == null ? Padding(
+              padding: const EdgeInsets.all(5),
+              child: SvgPicture.asset("images/bottle.svg"),
+            ) : CachedNetworkImage(
+              imageUrl: widget.alcohol.imageUrl!,
+              placeholder: (context, url) => const CircularProgressIndicator(),
+              errorWidget: (context, url, error) => Padding(
+                padding: const EdgeInsets.all(5),
+                child: SvgPicture.asset("images/bottle.svg"),
+              ),
+              cacheManager: null,
+            )
           );
-
+    // FadeInImage(placeholder: MemoryImage(kTransparentImage), //todo handle placeholder
+    //     fit: BoxFit.contain,
+    //     image: NetworkImage(widget.alcohol.imageUrl!)),
   }
 
   Widget _createDescriptionColumn(){
