@@ -10,7 +10,11 @@ class AlcoholRepository {
 
   static final AlcoholNetwork alcoholApi = AlcoholNetwork(); //TODO use dependency injection
 
-  static final List<Alcohol> _displayList = List.empty(growable: true);
+  final List<Alcohol> _displayList = List.empty(growable: true);
+
+  late Future<List<Alcohol>> listFetcher;
+  final AlcoholFilters filters = AlcoholFilters();
+  bool isFetchingList = false;
 
   int _page = 1;
   int? lastPage;
@@ -30,7 +34,18 @@ class AlcoholRepository {
     }
   }
 
-  Future<List<Alcohol>> updateAlcoholList({AlcoholFilters? filters, bool filtersChanged = false, String? searchQuery}) async{
+  void updateAlcoholList({AlcoholFilters? filters, bool filtersChanged = false, String? searchQuery}) async{
+    isFetchingList = true;
+    listFetcher = _updateAlcoholList(filters: filters, filtersChanged: filtersChanged, searchQuery: searchQuery).whenComplete(() => isFetchingList = false);
+  }
+
+  void loadAlcoholListWithCategory(String category) async{
+    isFetchingList = true;
+    filters.categorySelection = List.generate(4, (index) => AlcoholFilters.CATEGORIES[index] == category);
+    listFetcher = _updateAlcoholList(filters: filters, filtersChanged: true).whenComplete(() => isFetchingList = false);
+  }
+
+  Future<List<Alcohol>> _updateAlcoholList({AlcoholFilters? filters, bool filtersChanged = false, String? searchQuery}) async{
     if(lastPage != null && _page > lastPage! && !filtersChanged) return Future.value(_displayList);
     try{
       if(filtersChanged) {
@@ -57,5 +72,9 @@ class AlcoholRepository {
     } on Exception {
       throw Exception(_displayList);
     }
+  }
+
+  bool isListEmpty() {
+    return _displayList.isEmpty;
   }
 }

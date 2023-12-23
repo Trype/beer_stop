@@ -279,26 +279,27 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     CategoryCard(AlcoholFilters.CATEGORIES[0],
                         "images/wine_glass.svg", () {
-                          context.go(
-                              '${SearchScreen.route}?category=${AlcoholFilters
-                                  .CATEGORIES[0]}');
+                          repository.loadAlcoholListWithCategory(AlcoholFilters
+                              .CATEGORIES[0]);
+                          context.go(SearchScreen.route);
                         }),
                     CategoryCard(
                         AlcoholFilters.CATEGORIES[1], "images/beer_mug.svg", () {
-                      context.go('${SearchScreen.route}?category=${AlcoholFilters
-                          .CATEGORIES[1]}');
+                      repository.loadAlcoholListWithCategory(AlcoholFilters
+                          .CATEGORIES[1]);
+                      context.go(SearchScreen.route);
                     }),
                     CategoryCard(AlcoholFilters.CATEGORIES[2],
                         "images/spirit_glass.svg", () {
-                          context.go(
-                              '${SearchScreen.route}?category=${AlcoholFilters
-                                  .CATEGORIES[2]}');
+                      repository.loadAlcoholListWithCategory(AlcoholFilters
+                          .CATEGORIES[2]);
+                      context.go(SearchScreen.route);
                         }),
                     CategoryCard(AlcoholFilters.CATEGORIES[3],
                         "images/cooler_can.svg", () {
-                          context.go(
-                              '${SearchScreen.route}?category=${AlcoholFilters
-                                  .CATEGORIES[3]}');
+                          repository.loadAlcoholListWithCategory(AlcoholFilters
+                              .CATEGORIES[3]);
+                          context.go(SearchScreen.route);
                         })
                   ].map((widget) =>
                       Padding(
