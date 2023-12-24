@@ -317,7 +317,6 @@ class _SearchScreenState extends State<SearchScreen> {
              flex: 5,
              child: _searchFunctionality()
            ) : _searchFunctionality(),
-            // if(!menuToggle)
             Flexible(
               flex: 1,
                 child: FutureBuilder<List<Alcohol>>(
@@ -338,13 +337,9 @@ class _SearchScreenState extends State<SearchScreen> {
                           );
                         });
                 }
-                // else if(snapshot.hasError){
-                //   //todo
-                // }
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 34.5),
                   child: ListView.builder(
-                      // clipBehavior: Clip.antiAlias,
                       itemCount: _tempDisplayList.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Padding(
