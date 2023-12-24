@@ -22,47 +22,17 @@ class SearchBarCustom extends StatefulWidget {
 class _SearchBarCustomState extends State<SearchBarCustom> {
 
   String _displayStringForOption(Alcohol option) => option.title;
-  Timer? _debounce;
   List<Alcohol> _suggested = List.empty();
-
-  // void _onSearchChanged(String query) async{
-  //
-  //   if (_debounce?.isActive ?? false) _debounce!.cancel();
-  //   _debounce = Timer(const Duration(milliseconds: 200), () {
-  //
-  //     widget.repository.fetchSuggestions(query).then((value) => {
-  //       setState(() {
-  //         _suggestionList = value;
-  //       })
-  //     });
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
         builder: (context, constraints) => Autocomplete<Alcohol>(
       optionsBuilder: (TextEditingValue textEditingValue) async{
-        // if (_debounce?.isActive ?? false) _debounce!.cancel();
-        // _debounce = Timer(const Duration(milliseconds: 200), () async {
-        //   List<Alcohol> _tempSuggestionList = await widget.repository.fetchSuggestions(textEditingValue.text);
-        //   return _tempSuggestionList;
-        // });
         _suggested = await widget.repository.fetchSuggestions(textEditingValue.text);
         return _suggested.length > 5 ? _suggested.getRange(0, 5) : _suggested;
       },
       displayStringForOption: _displayStringForOption,
-      onSelected: (Alcohol selection) {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => DescriptionScreen(alcohol: selection,)),
-        // );
-        // Material(
-        //     type: MaterialType.transparency,
-        //     child: SizedBox(
-        //     height: 40,
-        //     child:
-      },
       fieldViewBuilder: (BuildContext context,
           TextEditingController textEditingController,
           FocusNode focusNode,

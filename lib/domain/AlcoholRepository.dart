@@ -60,7 +60,7 @@ class AlcoholRepository {
         _page++;
         return _displayList;
     } on Exception {
-      throw Exception(_displayList);
+      return _displayList;
     }
   }
 
@@ -70,7 +70,7 @@ class AlcoholRepository {
       List<Alcohol> efficientAlcohols = data.alcohols;
       return efficientAlcohols;
     } on Exception {
-      throw Exception(_displayList);
+      return List.empty();
     }
   }
 
