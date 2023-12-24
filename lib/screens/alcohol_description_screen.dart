@@ -96,8 +96,7 @@ class _AlcoholDescriptionScreenState extends State<AlcoholDescriptionScreen> wit
           textAlign: TextAlign.center,
           style: const TextStyle(
               color: Colors.black,
-              fontSize: 12,
-              fontFamily: 'Raleway',
+              fontSize: 15,
               fontWeight: FontWeight.w700
           ),
         ),
