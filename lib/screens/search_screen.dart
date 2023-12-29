@@ -183,22 +183,28 @@ class _SearchScreenState extends State<SearchScreen> {
             Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 34.5, vertical: 10),
-              child: MultiSelectDialogField(
-                buttonText:
-                    Text(switch (repository.filters.categorySelection.length) {
-                  0 || 4 => "All categories selected",
-                  1 => "1 category selected",
-                  _ =>
-                    "${repository.filters.categorySelection.length} categories selected"
-                }),
-                items: AlcoholFilters.CATEGORIES
-                    .map((e) => MultiSelectItem(e, e))
-                    .toList(),
-                listType: MultiSelectListType.CHIP,
-                onConfirm: (values) {
-                  repository.filters.categorySelection = values;
+              child: StatefulBuilder(
+                builder: (context, setState) {
+                  return MultiSelectDialogField(
+                    buttonText: Text(
+                        switch (repository.filters.categorySelection.length) {
+                      0 || 4 => "All categories selected",
+                      1 => "1 category selected",
+                      _ =>
+                        "${repository.filters.categorySelection.length} categories selected"
+                    }),
+                    items: AlcoholFilters.CATEGORIES
+                        .map((e) => MultiSelectItem(e, e))
+                        .toList(),
+                    listType: MultiSelectListType.CHIP,
+                    onConfirm: (values) {
+                      setState(() {
+                        repository.filters.categorySelection = values;
+                      });
+                    },
+                    initialValue: repository.filters.categorySelection,
+                  );
                 },
-                initialValue: repository.filters.categorySelection,
               ),
             ),
             Padding(
@@ -364,9 +370,13 @@ class _SearchScreenState extends State<SearchScreen> {
                             );
                           });
                     }
+                    // else if(snapshot.hasError){
+                    //   //todo
+                    // }
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 34.5),
                       child: ListView.builder(
+                          // clipBehavior: Clip.antiAlias,
                           itemCount: _tempDisplayList.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Padding(
