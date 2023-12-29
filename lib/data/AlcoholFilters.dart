@@ -1,27 +1,23 @@
+import 'package:beer_stop/data/Categories.dart';
 import 'package:beer_stop/data/RangeFilter.dart';
 import 'package:flutter/material.dart';
 
 class AlcoholFilters {
 
   AlcoholFilters.fromCategory(String category){
-    categorySelection = List.generate(4, (index) => CATEGORIES[index] == category);
+    categorySelection.add(category);
   }
 
   AlcoholFilters();
 
   static final List<String> CATEGORIES = <String> [
-    "Wine",
-    "Beer & Cider",
-    "Spirits",
-    "Coolers"
+    Wine.name,
+    BeerCider.name,
+    Spirits.name,
+    Coolers.name
   ];
 
-  List<bool> categorySelection = <bool> [
-    true,
-    true,
-    true,
-    true
-  ];
+  List<String> categorySelection = <String> [];
 
   RangeFilter priceIndices = RangeFilter(filterName: "Price Index");
   RangeFilter prices = RangeFilter(filterName: "Price");

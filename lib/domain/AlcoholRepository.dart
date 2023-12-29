@@ -41,7 +41,7 @@ class AlcoholRepository {
 
   void loadAlcoholListWithCategory(String category) async{
     isFetchingList = true;
-    filters.categorySelection = List.generate(4, (index) => AlcoholFilters.CATEGORIES[index] == category);
+    filters.categorySelection = [category];
     listFetcher = _updateAlcoholList(filters: filters, filtersChanged: true).whenComplete(() => isFetchingList = false);
   }
 

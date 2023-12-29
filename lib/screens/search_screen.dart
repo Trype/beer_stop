@@ -8,6 +8,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:collection/collection.dart';
+import 'package:multi_select_flutter/dialog/multi_select_dialog_field.dart';
+import 'package:multi_select_flutter/util/multi_select_item.dart';
+import 'package:multi_select_flutter/util/multi_select_list_type.dart';
 
 import '../data/Alcohol.dart';
 
@@ -156,38 +159,30 @@ class _SearchScreenState extends State<SearchScreen> {
       key: _formKey,
       child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
         const Text("Categories"),
-        ToggleButtons(
-          direction: Axis.horizontal,
-          onPressed: (int index) {
-            // All buttons are selectable.
-            setState(() {
-              repository.filters.categorySelection[index] =
-                  !repository.filters.categorySelection[index];
-            });
+        Padding(padding: const EdgeInsets.symmetric(horizontal: 34.5),
+        child: MultiSelectDialogField(
+          buttonText: Text(switch(repository.filters.categorySelection.length){
+            0 || 4 => "All categories selected",
+            1 => "1 category selected",
+            _ => "${repository.filters.categorySelection.length} categories selected"
+          }),
+          items: AlcoholFilters.CATEGORIES.map((e) => MultiSelectItem(e, e)).toList(),
+          listType: MultiSelectListType.CHIP,
+          onConfirm: (values) {
+            repository.filters.categorySelection = values;
           },
-          borderRadius: const BorderRadius.all(Radius.circular(8)),
-          selectedBorderColor: Colors.green[700],
-          selectedColor: Colors.white,
-          fillColor: Colors.green[200],
-          color: Colors.green[400],
-          constraints: const BoxConstraints(
-            minHeight: 30.0,
-            minWidth: 60.0,
-          ),
-          isSelected: repository.filters.categorySelection,
-          children: AlcoholFilters.CATEGORIES
-              .map((e) => Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Text(e),
-                  ))
-              .toList(),
-        ),
+          initialValue: repository.filters.categorySelection,
+        ),),
+        const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
         _createFilterFormField(_minPriceIndexController,
             _maxPriceIndexController, repository.filters.priceIndices),
+    const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
         _createFilterFormField(
             _minPriceController, _maxPriceController, repository.filters.prices),
+    const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
         _createFilterFormField(
             _minVolumeController, _maxVolumeController, repository.filters.volumes),
+    const Padding(padding: EdgeInsets.symmetric(vertical: 10)),
         _createFilterRangeSlider(repository.filters.alcoholContents),
         const SizedBox(
           height: 10,
