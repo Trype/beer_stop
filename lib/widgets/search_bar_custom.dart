@@ -62,7 +62,7 @@ class _SearchBarCustomState extends State<SearchBarCustom> {
             ),
             enabled: widget.enabled,
             onSubmitted: (String text) {
-              if(widget.callback != null) widget.callback!(text);
+              if(widget.callback != null && text.isNotEmpty) widget.callback!(text);
             },
           ),
         );
