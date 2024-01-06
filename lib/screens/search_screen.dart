@@ -269,7 +269,7 @@ class _SearchScreenState extends State<SearchScreen> {
             height: AppBar().preferredSize.height,
           ),
           InkWell(
-            child: const Icon(Icons.menu),
+            child: const Icon(Icons.menu, size: 30,),
             onTap: () {
               //action code when clicked
               _dialogBuilder(context);
