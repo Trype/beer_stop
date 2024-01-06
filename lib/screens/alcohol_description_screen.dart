@@ -224,7 +224,8 @@ class _AlcoholDescriptionScreenState extends State<AlcoholDescriptionScreen> wit
                         ],
                       ),
                       const SizedBox(height: 25,),
-                      SmallDescription("Description", widget.alcohol.description ?? "No idea. Try at your own risk")
+                      SmallDescription("Description", widget.alcohol.description ?? "No idea. Try at your own risk"),
+                      const SizedBox(height: 25,),
                     ],),
                 ),
               );

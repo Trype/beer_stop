@@ -154,9 +154,10 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
-    if (!repository.isFetchingList && repository.isListEmpty())
+    if (!repository.isFetchingList && repository.isListEmpty()) {
       repository.updateAlcoholList(
           filters: repository.filters, filtersChanged: true);
+    }
     _scrollController.addListener(() {
       if (_scrollController.position.maxScrollExtent ==
           _scrollController.position.pixels) {
@@ -172,86 +173,88 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget _menuColumn(BuildContext dialogContext) {
     return Form(
       key: _formKey,
-      child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(top: 10),
-              child: Text("Categories"),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 34.5, vertical: 10),
-              child: StatefulBuilder(
-                builder: (context, setState) {
-                  return MultiSelectDialogField(
-                    buttonText: Text(
+      child: SingleChildScrollView(
+        child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(top: 10),
+                child: Text("Categories"),
+              ),
+              Padding(
+                padding:
+                const EdgeInsets.symmetric(horizontal: 34.5, vertical: 10),
+                child: StatefulBuilder(
+                  builder: (context, setState) {
+                    return MultiSelectDialogField(
+                        buttonText: Text(
                         switch (repository.filters.categorySelection.length) {
-                      0 || 4 => "All categories selected",
-                      1 => "1 category selected",
-                      _ =>
-                        "${repository.filters.categorySelection.length} categories selected"
+                    0 || 4 => "All categories selected",
+                    1 => "1 category selected",
+                    _ =>
+                    "${repository.filters.categorySelection.length} categories selected"
                     }),
                     items: AlcoholFilters.CATEGORIES
                         .map((e) => MultiSelectItem(e, e))
                         .toList(),
                     listType: MultiSelectListType.CHIP,
                     onConfirm: (values) {
-                      setState(() {
-                        repository.filters.categorySelection = values;
-                      });
+                    setState(() {
+                    repository.filters.categorySelection = values;
+                    });
                     },
                     initialValue: repository.filters.categorySelection,
-                  );
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: _createFilterFormField(_minPriceIndexController,
-                  _maxPriceIndexController, repository.filters.priceIndices),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: _createFilterFormField(_minPriceController,
-                  _maxPriceController, repository.filters.prices),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child: _createFilterFormField(_minVolumeController,
-                  _maxVolumeController, repository.filters.volumes),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              child:
-                  _createFilterRangeSlider(repository.filters.alcoholContents),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10),
-              child: OutlinedButton(
-                  onPressed: () {
-                    setState(() {
-                      if (_formKey.currentState!.validate()) {
-                        FocusScope.of(context).requestFocus(FocusNode());
-                        // menuToggle = false;
-                        _searchNoFilters = false;
-                        repository.updateAlcoholList(
-                            filters: repository.filters,
-                            filtersChanged: true,
-                            searchQuery: _searchQuery);
-                        _scrollController
-                            .jumpTo(_scrollController.position.minScrollExtent);
-                        Navigator.pop(dialogContext);
-                      }
-                    });
+                    );
                   },
-                  child: const Text('Apply Filters')),
-            ),
-          ]),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: _createFilterFormField(_minPriceIndexController,
+                    _maxPriceIndexController, repository.filters.priceIndices),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: _createFilterFormField(_minPriceController,
+                    _maxPriceController, repository.filters.prices),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: _createFilterFormField(_minVolumeController,
+                    _maxVolumeController, repository.filters.volumes),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child:
+                _createFilterRangeSlider(repository.filters.alcoholContents),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: OutlinedButton(
+                    onPressed: () {
+                      setState(() {
+                        if (_formKey.currentState!.validate()) {
+                          FocusScope.of(context).requestFocus(FocusNode());
+                          // menuToggle = false;
+                          _searchNoFilters = false;
+                          repository.updateAlcoholList(
+                              filters: repository.filters,
+                              filtersChanged: true,
+                              searchQuery: _searchQuery);
+                          _scrollController
+                              .jumpTo(_scrollController.position.minScrollExtent);
+                          Navigator.pop(dialogContext);
+                        }
+                      });
+                    },
+                    child: const Text('Apply Filters')),
+              ),
+            ]),
+      ),
     );
   }
 
@@ -262,7 +265,7 @@ class _SearchScreenState extends State<SearchScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: AppBar().preferredSize.height + 30,
+            height: AppBar().preferredSize.height,
           ),
           InkWell(
             child: const Icon(Icons.menu),
