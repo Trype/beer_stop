@@ -25,28 +25,43 @@ class _LikedScreenState extends State<LikedScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Consumer<GlobalSettings>(
-        builder: (context, settings, child) {
-          final alcoholList = settings.getLikedAlcoholList();
-          return ListView.builder(
-              itemCount: alcoholList.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: AlcoholDescriptionCard(
-                      parentRoute: '/liked', alcohol: alcoholList[index]),
-                );
-              });
-        },
-      ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 34.5),
+      child: Scaffold(
+        appBar: AppBar(title: const Row(
+          children: [
+            Text('Liked', style: TextStyle(
+                color: Colors.black,
+                fontSize: 24,
+                fontFamily: 'Playfair Display',
+                fontWeight: FontWeight.w700
+            )),
+            Icon(Icons.favorite, color: Colors.redAccent,)
+          ],
+        ),
+        centerTitle: false,),
+        body: Consumer<GlobalSettings>(
+          builder: (context, settings, child) {
+            final alcoholList = settings.getLikedAlcoholList();
+            return ListView.builder(
+                itemCount: alcoholList.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: AlcoholDescriptionCard(
+                        parentRoute: '/liked', alcohol: alcoholList[index]),
+                  );
+                });
+          },
+        ),
 
-      // Consumer<GlobalSettings>(
-      //   builder: (context, settings, child){
-      //     final alcoholList = settings.getLikedAlcoholList();
-      //
-      //   },
-      // ),
+        // Consumer<GlobalSettings>(
+        //   builder: (context, settings, child){
+        //     final alcoholList = settings.getLikedAlcoholList();
+        //
+        //   },
+        // ),
+      ),
     );
   }
 }
