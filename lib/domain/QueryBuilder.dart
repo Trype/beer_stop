@@ -5,11 +5,9 @@ String buildQuery(AlcoholFilters? filters, String? searchQuery, int page){
   String query = AlcoholNetwork.base_url;
   if(searchQuery != null) query += "&search=${_encodeUrl(searchQuery)}";
   if(filters == null) return query;
-  filters.categorySelection.asMap().forEach((i, selected) {
-    if(selected) {
-      String formattedCategory = AlcoholFilters.CATEGORIES[i].replaceAll("&", "%26");
+  filters.categorySelection.asMap().forEach((_, selected) {
+      String formattedCategory = selected.replaceAll("&", "%26");
       query += "&category[]=$formattedCategory";
-    }
     });
   if(filters.priceIndices.minVal != null && filters.priceIndices.enabled) query += "&minPriceIndex=${filters.priceIndices.minVal}";
   if(filters.priceIndices.maxVal != null && filters.priceIndices.enabled) query += "&maxPriceIndex=${filters.priceIndices.maxVal}";
