@@ -75,9 +75,9 @@ class AlcoholDescriptionCard extends StatelessWidget {
                     Padding(padding: EdgeInsets.symmetric(vertical: 10),
                       child: Text("\$${alcohol.priceIndex.toStringAsFixed(3)}/mL", style: const TextStyle(
                           color: Colors.black,
-                          fontSize: 9.5,
-                          fontFamily: 'Raleway',
-                          fontWeight: FontWeight.w700
+                          fontSize: 17,
+                          fontFamily: 'Playfair Display',
+                          fontWeight: FontWeight.normal
                       ), textAlign: TextAlign.center,),)
                   ].map((widget) => Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 7),
